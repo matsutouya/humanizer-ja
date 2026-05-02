@@ -37,7 +37,7 @@
 
 ```bash
 mkdir -p ~/.claude/skills
-git clone https://github.com/paris0001/humanizer-ja.git ~/.claude/skills/humanizer-ja
+git clone https://github.com/matsutouya/humanizer-ja.git ~/.claude/skills/humanizer-ja
 ```
 
 または、SKILL.md を手動でコピーする：
@@ -51,7 +51,7 @@ cp SKILL.md ~/.claude/skills/humanizer-ja/
 
 ```bash
 mkdir -p ~/.config/opencode/skills
-git clone https://github.com/paris0001/humanizer-ja.git ~/.config/opencode/skills/humanizer-ja
+git clone https://github.com/matsutouya/humanizer-ja.git ~/.config/opencode/skills/humanizer-ja
 ```
 
 ---
