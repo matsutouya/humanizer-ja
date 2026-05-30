@@ -1,0 +1,15 @@
+{
+  "name": "pi-colliding-blocks",
+  "version": "1.0.0",
+  "description": "Compute the digits of pi by colliding two blocks (Galperin's billiard).",
+  "main": "physics.js",
+  "bin": {
+    "pi-blocks": "pi-blocks.js"
+  },
+  "scripts": {
+    "start": "node pi-blocks.js",
+    "table": "node pi-blocks.js --table",
+    "test": "node physics.test.js"
+  },
+  "license": "MIT"
+}
