@@ -1,0 +1,8 @@
+# 個人の書き手プロファイルは公開リポジトリに含めない
+# （テンプレートの writer-profile.md は追跡対象のまま）
+profiles/
+profiles
+writer-profile-*.md
+
+# macOS
+.DS_Store

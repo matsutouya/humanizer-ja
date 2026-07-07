@@ -85,6 +85,20 @@ git clone https://github.com/matsutouya/humanizer-ja.git ~/.config/opencode/skil
 
 ---
 
+## 複数のMacで完全連携させる（iMac Pro / MacBook Pro など）
+
+2台以上のMacで使う場合は、それぞれのMacで以下を1回実行すると、スキルの配置と自動同期（ログイン時 + 15分ごと）までセットアップされます。
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/matsutouya/humanizer-ja/main/scripts/setup-mac.sh | bash
+```
+
+どちらのMacで SKILL.md や書き手プロファイルを編集しても、GitHub 経由でもう一方へ自動反映されます。個人プロファイルを iCloud Drive で同期するオプションもあります。
+
+詳しくは [SYNC.md](./SYNC.md) を参照してください。
+
+---
+
 ## 使い方
 
 ### 基本の使い方
