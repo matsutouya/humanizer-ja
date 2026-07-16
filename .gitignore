@@ -6,3 +6,5 @@ writer-profile-*.md
 
 # macOS
 .DS_Store
+keirin/keirin.sqlite3
+__pycache__/
