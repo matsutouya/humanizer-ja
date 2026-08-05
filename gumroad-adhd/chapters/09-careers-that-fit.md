@@ -75,7 +75,7 @@ One last practical shift. Once you think in fit terms, job interviews change: yo
 - "How often do priorities change here, and is that considered a problem or normal?"
 - "What does the team do when someone's strong at the creative side but needs support on admin?" (Their reaction to this question is data all by itself.)
 
-You don't have to disclose anything to ask these. You're just a candidate who knows their own spec sheet — which, frankly, puts you ahead of most candidates.
+You don't have to disclose anything to ask these. You're just a candidate who knows their own spec sheet — which, frankly, puts you ahead of most candidates. And if the interviewer bristles at being asked what the work actually looks like, that's not a failed interview. That's the filter working before you signed anything.
 
 The quiet endgame of this chapter isn't a dream job. It's the radar from chapter 1, fully installed: you read a role, you feel the "this is Windows software" ping, and you stop volunteering. And when you find work that lands on list one, you stop being surprised that you're suddenly "a different person" there. You're not a different person. You're the same machine, finally installed where it wins.
 

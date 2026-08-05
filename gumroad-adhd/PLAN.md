@@ -21,17 +21,17 @@
 | # | Chapter | Status |
 |---|---------|--------|
 | 1 | Your Brain Isn't Broken: Reframing ADHD as an Operating System | ✅ done |
-| 2 | The Interest-Driven Nervous System: Why Willpower Advice Fails You | ⬜ next |
-| 3 | Externalize Everything: Building a Second Brain That Actually Sticks | ⬜ |
-| 4 | Time Blindness: Making Time Visible, Physical, and Loud | ⬜ |
-| 5 | The Two-Minute Lie: Task Initiation and How to Actually Start | ⬜ |
-| 6 | Hyperfocus as a Superpower (and How Not to Get Burned by It) | ⬜ |
-| 7 | Body Doubling, Accountability, and Borrowing Other People's Executive Function | ⬜ |
-| 8 | Money and ADHD: Impulse Spending, Invisible Bills, Automation | ⬜ |
-| 9 | Careers That Fit: Choosing Work That Rewards Your Wiring | ⬜ |
-| 10 | Emotional Regulation and Rejection Sensitivity at Work | ⬜ |
-| 11 | Building Routines That Survive the Novelty Cliff | ⬜ |
-| 12 | Your Personal Operating Manual: Putting It All Together | ⬜ |
+| 2 | The Interest-Driven Nervous System: Why Willpower Advice Fails You | ✅ done |
+| 3 | Externalize Everything: Building a Second Brain That Actually Sticks | ✅ done |
+| 4 | Time Blindness: Making Time Visible, Physical, and Loud | ✅ done |
+| 5 | The Two-Minute Lie: Task Initiation and How to Actually Start | ✅ done |
+| 6 | Hyperfocus as a Superpower (and How Not to Get Burned by It) | ✅ done |
+| 7 | Body Doubling, Accountability, and Borrowing Other People's Executive Function | ✅ done |
+| 8 | Money and ADHD: Impulse Spending, Invisible Bills, Automation | ✅ done |
+| 9 | Careers That Fit: Choosing Work That Rewards Your Wiring | ✅ done |
+| 10 | Emotional Regulation and Rejection Sensitivity at Work | ✅ done |
+| 11 | Building Routines That Survive the Novelty Cliff | ✅ done |
+| 12 | Your Personal Operating Manual: Putting It All Together | ✅ done |
 
 ## Automation workflow (for the recurring session)
 
