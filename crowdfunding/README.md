@@ -3,8 +3,28 @@
 自分たちの曲を作る資金を集めるために始める、**誰でも出品できる**購入型クラウドファンディングサイト。
 CAMPFIRE のようなマルチ出品者型プラットフォームを、まず自分たちのプロジェクトを第1号案件として立ち上げる。
 
-> ⚠️ このディレクトリは現時点では **設計ドキュメントのみ**。コードはまだ書いていない。
-> PC 側で実装を始めるときに、この `crowdfunding/` フォルダごと持っていけば全部そろう状態にしてある。
+> ✅ **Phase 0（環境構築）まで完了。動く Next.js プロジェクトになっている。**
+> DB を用意しなくても、トップページと `/styleguide` は表示できる。
+
+```bash
+cd crowdfunding
+npm install
+npm run dev      # → http://localhost:3000
+```
+
+| コマンド | 内容 |
+|---|---|
+| `npm run dev` | 開発サーバー |
+| `npm run build` | 本番ビルド |
+| `npm test` | ユニットテスト（25件） |
+| `npm run typecheck` | 型チェック |
+| `npm run lint` | ESLint |
+| `npm run db:migrate` | マイグレーション（**DB が必要**） |
+| `npm run db:seed` | 初期データ投入（**DB が必要**） |
+| `npm run db:studio` | DB の中身をブラウザで確認（**DB が必要**） |
+
+**まだ DB につながっていない。** Neon のアカウントを作って `.env` を書けば続きから進められる
+（[docs/09-setup.md](docs/09-setup.md)）。
 
 ---
 

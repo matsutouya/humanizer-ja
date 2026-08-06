@@ -30,61 +30,127 @@
 
 ## 1. プロジェクト作成
 
+> ✅ **Phase 0 実施済み。** リポジトリの `crowdfunding/` がそのまま動くプロジェクトになっている。
+> `git clone` して `npm install` すれば、この章はスキップできる。以下は再現手順の記録。
+
 ```bash
 npx create-next-app@latest fundbeat \
-  --typescript --tailwind --app --src-dir=false --eslint --import-alias "@/*"
+  --typescript --tailwind --app --no-src-dir --eslint --import-alias "@/*" \
+  --use-npm --turbopack
 cd fundbeat
 ```
 
 ```bash
 # 主要パッケージ
-npm i @prisma/client next-auth@beta @auth/prisma-adapter stripe zod resend \
-      date-fns clsx tailwind-merge lucide-react react-markdown rehype-sanitize \
-      @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+npm i @prisma/client @prisma/adapter-pg pg stripe zod \
+      date-fns clsx tailwind-merge lucide-react \
+      react-markdown remark-gfm rehype-sanitize
 
-npm i -D prisma vitest @playwright/test tsx
+npm i -D prisma tsx vitest dotenv @types/pg
 ```
 
-```bash
-# shadcn/ui
-npx shadcn@latest init
-npx shadcn@latest add button card input textarea label badge dialog \
-      dropdown-menu select tabs avatar separator sonner skeleton
-```
+**フェーズごとに追加するもの**（いまは入れない）:
+
+| パッケージ | フェーズ |
+|---|---|
+| `next-auth@beta` `@auth/prisma-adapter` `resend` | Phase 1 |
+| `@aws-sdk/client-s3` `@aws-sdk/s3-request-presigner` | Phase 2 |
+| `@playwright/test` | Phase 5 |
+
+shadcn/ui は Phase 0 では導入していない（[02-architecture.md](02-architecture.md) 参照）。
+必要になったら `npx shadcn@latest init` から始める。
 
 ---
 
-## 2. Prisma セットアップ
+## 2. Prisma セットアップ（⚠️ Prisma 7 で手順が変わっている）
 
-```bash
-npx prisma init --datasource-provider postgresql
+**Prisma 7 から、接続 URL を `schema.prisma` に書けない。** `prisma.config.ts` に書く。
+さらに `PrismaClient` にドライバアダプタを渡すことが必須になった。
+
+### 2.1 スキーマ
+
+`prisma/schema.prisma` の datasource は **provider だけ**にする。
+
+```prisma
+datasource db {
+  provider = "postgresql"
+}
 ```
 
-`prisma/schema.prisma` を [03-db-schema.md](03-db-schema.md) の内容で置き換えてから:
+`url` や `directUrl` を書くとエラー（P1012）になる。
+モデル定義は [03-db-schema.md](03-db-schema.md) を参照。
 
-```bash
-npx prisma migrate dev --name init
-npx prisma generate
+### 2.2 prisma.config.ts
+
+プロジェクト直下に置く。**ここの url は CLI 専用**（migrate / studio / seed）。
+
+```ts
+import 'dotenv/config'
+import { defineConfig, env } from 'prisma/config'
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
+  migrations: { seed: 'tsx prisma/seed.ts' },
+  datasource: {
+    // ★ pooler を経由しない直接接続を指定する。
+    //   pooled URL を渡すとマイグレーションが正しく動かない
+    url: env('DIRECT_URL'),
+  },
+})
 ```
 
-`package.json` に追加:
+`directUrl` というキーは Prisma 7 では受け付けない。**CLI が使う URL は1つだけ。**
+
+### 2.3 アプリからの接続（lib/db.ts）
+
+アプリ実行時は **pooled の `DATABASE_URL`** をアダプタに渡す。
+
+```ts
+import { PrismaClient } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
+export const db = new PrismaClient({ adapter })
+```
+
+```
+prisma.config.ts  →  DIRECT_URL（直接接続）  … CLI
+lib/db.ts         →  DATABASE_URL（pooled） … アプリ
+```
+
+**この2つを取り違えると、本番で接続数が枯渇するか、マイグレーションが失敗する。**
+
+### 2.4 マイグレーション
+
+```bash
+npx prisma validate          # DB なしで検証できる
+npx prisma generate          # DB なしで実行できる
+npx prisma migrate dev --name init   # ★ DB が必要
+```
+
+`package.json` の scripts:
 
 ```jsonc
 {
-  "prisma": { "seed": "tsx prisma/seed.ts" },
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "db:push": "prisma db push",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
-    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe",
-    "test": "vitest",
-    "test:e2e": "playwright test"
+    "db:generate": "prisma generate",
+    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe"
   }
 }
 ```
+
+seed の指定は `package.json` の `"prisma"` フィールドではなく、
+**`prisma.config.ts` の `migrations.seed`** に書く（Prisma 7 での変更）。
 
 ```bash
 npm run db:seed
@@ -135,17 +201,10 @@ R2_PUBLIC_URL="https://cdn.example.com"
 CRON_SECRET="..."   # openssl rand -hex 32
 ```
 
-`schema.prisma` の datasource は両方指定する:
+**`DATABASE_URL` と `DIRECT_URL` の使い分けは §2 のとおり。**
+`schema.prisma` にはどちらも書かない（Prisma 7 では書けない）。
 
-```prisma
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-```
-
-`.env.example` には**同じキーを値を空にして**コミットしておく。
+`.env.example` には**同じキーを値を空にして**コミットしておく（リポジトリに用意済み）。
 
 ---
 
@@ -248,9 +307,11 @@ URL:  https://yourdomain.com/api/webhooks/stripe
 | Webhook が 400（署名エラー） | `req.json()` を使っている。**`await req.text()` で生ボディを取る** |
 | Webhook が届かない | `stripe listen` を起動していない / `whsec` が古い |
 | 請求額が100倍 | JPY に 100 を掛けている。**JPY は倍率不要** |
-| Prisma が接続エラー | Pooled URL(`-pooler`) を使っていない / `sslmode=require` がない |
-| マイグレーションが失敗 | `directUrl` に `-pooler` なしの URL を設定する |
+| Prisma が接続エラー | `lib/db.ts` に pooled URL(`-pooler`) を渡していない / `sslmode=require` がない |
+| マイグレーションが失敗 | `prisma.config.ts` の url に `-pooler` **なし**の `DIRECT_URL` を設定する |
 | Auth.js のリダイレクトループ | `AUTH_URL` と実際の URL が不一致 |
 | ビルドは通るのに本番で 500 | 環境変数が Vercel 側に入っていない |
+| `P1012` datasource property `url` is no longer supported | Prisma 7。URL は `prisma.config.ts` に書く（§2） |
+| `PrismaClient` の初期化で adapter を要求される | Prisma 7 ではドライバアダプタが必須。`@prisma/adapter-pg` を渡す |
 | Connect の onboarding が完了しない | `return_url` に戻っただけでは完了ではない。`accounts.retrieve` で確認する |
 | 支援が二重に計上される | Webhook の冪等性がない。`WebhookEvent` の unique 制約を入れる |

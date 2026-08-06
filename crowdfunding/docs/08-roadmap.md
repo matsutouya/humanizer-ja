@@ -4,19 +4,37 @@
 
 ---
 
-## Phase 0 — 土台をつくる（1日）
+## Phase 0 — 土台をつくる（1日）✅ 完了
 
-- [ ] `create-next-app` で TypeScript + Tailwind + App Router を選んで初期化
-- [ ] Neon で Postgres を作成（開発用ブランチも作る）
-- [ ] Prisma 導入 → [03-db-schema.md](03-db-schema.md) のスキーマを `schema.prisma` に貼る
-- [ ] `prisma migrate dev --name init`
-- [ ] `lib/db.ts`（Prisma シングルトン）
-- [ ] shadcn/ui 初期化、[07-design.md](07-design.md) のカラートークンを `globals.css` に設定
-- [ ] Header / Footer / コンテナのレイアウト
-- [ ] `.env.example` を作る
-- [ ] Vercel に空のままデプロイして疎通確認
+- [x] `create-next-app` で TypeScript + Tailwind + App Router を選んで初期化（Next 16 / Turbopack）
+- [ ] Neon で Postgres を作成（開発用ブランチも作る）← **アカウント作成が必要。未実施**
+- [x] Prisma 導入 → [03-db-schema.md](03-db-schema.md) のスキーマを `schema.prisma` に反映
+- [x] `prisma.config.ts` を作成（Prisma 7 では URL をここに書く）
+- [x] `npx prisma validate` / `generate` が通る
+- [ ] `prisma migrate dev --name init` ← **DB が必要。未実施**
+- [x] `lib/db.ts`（Prisma シングルトン + ドライバアダプタ）
+- [x] [07-design.md](07-design.md) のカラートークンを `globals.css` に設定
+- [x] Header / Footer / コンテナのレイアウト
+- [x] トップページ（ヒーロー・カテゴリ・出品導線）
+- [x] `/styleguide`（DB なしでデザインを検証できるページ）
+- [x] `lib/fees.ts` `limits.ts` `pledge-state.ts` `ledger.ts` を配置
+- [x] `lib/fees.ts` と `lib/utils.ts` のユニットテスト（25件）
+- [x] `prisma/seed.ts`（カテゴリ8件 + キルスイッチの初期値）
+- [x] `.env.example`
+- [x] `npm run build` / `typecheck` / `lint` / `test` がすべて通る
+- [ ] Vercel にデプロイして疎通確認 ← **アカウント連携が必要。未実施**
 
-**完了判定:** Vercel の URL でヘッダー付きの空ページが表示され、DB に接続できる。
+**完了判定:** ✅ `npm run dev` でヘッダー・フッター付きのトップページが表示される。
+`/styleguide` でデザイントークンと手数料計算が確認できる。
+
+**残っているのはアカウント作成が必要な3つだけ**（Neon / マイグレーション / Vercel）。
+[09-setup.md](09-setup.md) §0 のアカウントを作れば、そのまま続きから進められる。
+
+⚠️ **Phase 0 で判明した計画との差分**（[02-architecture.md](02-architecture.md) に反映済み）:
+- Prisma 7 では接続 URL を `schema.prisma` に書けない。`prisma.config.ts` に書き、
+  さらにドライバアダプタ（`@prisma/adapter-pg`）が必須
+- CLI 用（`DIRECT_URL`）とアプリ用（`DATABASE_URL`）で接続先が分かれる
+- shadcn/ui は未導入。必要になる Phase 2 で再検討
 
 ---
 

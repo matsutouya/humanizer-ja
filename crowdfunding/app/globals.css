@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/*
+ * デザイントークン — docs/07-design.md
+ *
+ * 方針:
+ *   - 白基調・カード主役
+ *   - アクセントカラーは1色のみ。支援ボタンと進捗バーにだけ使う
+ *   - Web フォントは読み込まない（日本語フォントは数MBあり LCP が壊滅する）
+ */
+
+:root {
+  /* ベース */
+  --bg: #ffffff;
+  --bg-subtle: #f7f8fa;
+  --bg-muted: #eef0f4;
+  --border: #e3e6ec;
+  --border-strong: #c9cdd6;
+
+  /* テキスト */
+  --fg: #14161a;
+  --fg-secondary: #4c525e;
+  --fg-muted: #6b7280;
+
+  /* アクセント（CTA・進捗バー）
+     ⚠️ 白背景に対して 3.1:1。細い文字色には使わない。
+        塗りボタンとバーの塗りにのみ使用する */
+  --accent: #ff5a4d;
+  --accent-hover: #ec4436;
+  --accent-active: #d3392c;
+  --accent-subtle: #fff1ef;
+
+  /* サブ */
+  --brand-deep: #1c2a44;
+
+  /* 状態 */
+  --success: #12855a;
+  --success-subtle: #e8f6ef;
+  --warning: #b26a00;
+  --warning-subtle: #fff5e5;
+  --danger: #c62828;
+  --danger-subtle: #fdecec;
+  --info: #1666c4;
+  --info-subtle: #eaf2fd;
+
+  /* 影 */
+  --shadow-sm: 0 1px 2px rgb(20 22 26 / 0.06);
+  --shadow-md: 0 4px 12px rgb(20 22 26 / 0.08);
+  --shadow-lg: 0 12px 32px rgb(20 22 26 / 0.12);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-bg-muted: var(--bg-muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-fg: var(--fg);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-muted: var(--fg-muted);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-active: var(--accent-active);
+  --color-accent-subtle: var(--accent-subtle);
+
+  --color-brand-deep: var(--brand-deep);
+
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-danger: var(--danger);
+  --color-danger-subtle: var(--danger-subtle);
+  --color-info: var(--info);
+  --color-info-subtle: var(--info-subtle);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-md);
+
+  /* OS のフォントを使う。Web フォントは読み込まない */
+  --font-sans:
+    "Hiragino Sans", "Noto Sans JP", "Yu Gothic Medium", system-ui, -apple-system,
+    sans-serif;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  /* 日本語は行間を広めに取る */
+  line-height: 1.8;
+}
+
+/* 金額・数値は桁を揃える。揃わないと一覧が汚く見える */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* フォーカスリング。すべてのインタラクティブ要素に効かせる */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

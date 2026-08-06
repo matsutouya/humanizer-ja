@@ -2,9 +2,13 @@
 
 ## 1. 結論（この構成で作る）
 
+> ✅ **Phase 0 実施済み。** 実際に構築した構成は下記のとおり。
+> 計画時点から変わった点は「Prisma 7 で接続 URL の置き場所が変わった」ことと、
+> 「shadcn/ui を初期導入せず、必要なコンポーネントを手書きした」こと。
+
 ```
-Next.js 15 (App Router) + TypeScript
-  ├─ UI        : Tailwind CSS v4 + shadcn/ui
+Next.js 16 (App Router, Turbopack) + React 19 + TypeScript
+  ├─ UI        : Tailwind CSS v4（コンポーネントは手書き。shadcn/ui は Phase 2 で検討）
   ├─ 認証      : Auth.js (NextAuth v5) — メールマジックリンク + Google
   ├─ DB        : PostgreSQL (Neon or Supabase) + Prisma
   ├─ 決済      : Stripe Connect (Express)
@@ -35,6 +39,37 @@ Next.js 15 (App Router) + TypeScript
 - 型が全部通るのでリファクタが怖くない。
 - 注意: サーバーレスでは接続数が枯渇しやすい。**Neon の pooled connection（`-pooler` 付き URL）を必ず使う**。
 
+#### ⚠️ Prisma 7 での変更点（Phase 0 でハマった箇所）
+
+Prisma 7 から、**接続 URL を `schema.prisma` に書けなくなった。** また **ドライバアダプタが必須**になった。
+
+| | Prisma 6 まで | **Prisma 7** |
+|---|---|---|
+| 接続 URL | `datasource db { url = env(...) }` | `prisma.config.ts` の `datasource.url` |
+| `directUrl` | `datasource` に書く | **廃止**。CLI 用の URL は1つだけ |
+| クライアント生成 | `new PrismaClient()` | `new PrismaClient({ adapter })` が必須 |
+| 追加パッケージ | — | `@prisma/adapter-pg` + `pg` |
+
+**重要な帰結: CLI 用とアプリ用で接続先が分かれる。**
+
+```
+prisma.config.ts の url  →  DIRECT_URL（pooler を通さない）… migrate / studio / seed
+lib/db.ts のアダプタ      →  DATABASE_URL（pooled）        … アプリ実行時
+```
+
+pooler 経由ではマイグレーションが正しく動かないため、この分離が必要。
+**取り違えると「本番で接続数が枯渇する」か「マイグレーションが失敗する」のどちらかになる。**
+
+### shadcn/ui は初期導入していない
+
+計画では shadcn/ui を使う想定だったが、Phase 0 では入れていない。
+
+- 必要なのは Button / Badge / Card 程度で、[07-design.md](07-design.md) のトークンに合わせて手書きしたほうが速い
+- Tailwind 4 + Next 16 の組み合わせでの初期化を検証する手間を、いま払う必要がない
+
+フォーム・ダイアログ・ドロップダウンが増える **Phase 2 で導入を再検討する**。
+手書きした分は `components/ui/` にまとまっているので、置き換えは局所的に済む。
+
 ### なぜ Auth.js（NextAuth v5）か
 - **パスワードを自前で持たない**のが最大の理由。ハッシュ管理・リセットフロー・漏洩リスクを全部回避できる。
 - メールマジックリンクなら「登録＝ログイン」で UX も単純。
@@ -45,9 +80,10 @@ Next.js 15 (App Router) + TypeScript
 - Express は本人確認・口座登録の画面を Stripe が全部用意してくれる。自作するとまず終わらない。
 - 詳細は [06-stripe.md](06-stripe.md)。
 
-### なぜ shadcn/ui か
+### shadcn/ui を将来入れるとしたら
 - コンポーネントをコピーして自分のリポジトリに置く方式なので、デザインを自由に改変できる。CAMPFIRE 風にカスタムするのに向いている。
 - npm 依存にならないのでバージョン地獄がない。
+- ただし Phase 0 では見送った（上記「shadcn/ui は初期導入していない」）。
 
 ---
 
@@ -127,7 +163,7 @@ crowdfunding/
 │   │   └── upload/route.ts
 │   └── layout.tsx
 ├── components/
-│   ├── ui/                          # shadcn/ui
+│   ├── ui/                          # 汎用 UI（EmptyState など）
 │   ├── project/                     # ProjectCard, ProgressBar, RewardCard...
 │   ├── creator/
 │   └── layout/                      # Header, Footer, Nav
@@ -175,36 +211,48 @@ crowdfunding/
 ## 6. 依存パッケージ（初期）
 
 ```jsonc
+// Phase 0 で実際に入れたもの（2026-08 時点の最新安定版）
 {
   "dependencies": {
-    "next": "^15",
-    "react": "^19",
-    "react-dom": "^19",
-    "@prisma/client": "^6",
-    "next-auth": "^5",
-    "@auth/prisma-adapter": "^2",
-    "stripe": "^17",
-    "zod": "^3",
-    "resend": "^4",
-    "@aws-sdk/client-s3": "^3",        // R2 用（S3 互換）
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "@prisma/client": "^7",
+    "@prisma/adapter-pg": "^7",        // ★ Prisma 7 では必須
+    "pg": "^8",
+    "stripe": "^22",
+    "zod": "^4",
     "date-fns": "^4",
     "clsx": "^2",
-    "tailwind-merge": "^2",
-    "lucide-react": "^0",              // アイコン
-    "@radix-ui/react-*": "*",          // shadcn/ui が要求する分
-    "react-markdown": "^9",
+    "tailwind-merge": "^3",
+    "lucide-react": "^1",              // アイコン
+    "react-markdown": "^10",
+    "remark-gfm": "^4",
     "rehype-sanitize": "^6"            // XSS 対策。必ず入れる
   },
   "devDependencies": {
     "typescript": "^5",
-    "prisma": "^6",
+    "prisma": "^7",
     "tailwindcss": "^4",
     "eslint": "^9",
-    "eslint-config-next": "^15",
-    "vitest": "^2",
-    "@playwright/test": "^1"
+    "eslint-config-next": "16.3.0",
+    "vitest": "^4",
+    "tsx": "^4",
+    "dotenv": "^17",
+    "@types/pg": "^8"
   }
 }
 ```
 
-バージョンは実装開始時点の最新安定版を確認して決めること。上記は目安。
+### 各フェーズで追加するもの
+
+まだ入れていない。必要になったフェーズで入れる。
+
+| パッケージ | フェーズ | 用途 |
+|---|---|---|
+| `next-auth@beta` + `@auth/prisma-adapter` | Phase 1 | 認証 |
+| `resend` | Phase 1 | メール送信 |
+| `@aws-sdk/client-s3` + `@aws-sdk/s3-request-presigner` | Phase 2 | R2 への画像アップロード |
+| `@playwright/test` | Phase 5 | E2E テスト |
+
+**バージョンは実装再開時に改めて確認すること。** 上記は Phase 0 時点の実測値。
