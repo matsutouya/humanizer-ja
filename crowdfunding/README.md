@@ -3,28 +3,21 @@
 自分たちの曲を作る資金を集めるために始める、**誰でも出品できる**購入型クラウドファンディングサイト。
 CAMPFIRE のようなマルチ出品者型プラットフォームを、まず自分たちのプロジェクトを第1号案件として立ち上げる。
 
-> ✅ **Phase 0（環境構築）まで完了。動く Next.js プロジェクトになっている。**
-> DB を用意しなくても、トップページと `/styleguide` は表示できる。
+> 📋 **このリポジトリは「計画」。実装は別リポジトリで行う。**
+> 設計・規約ドラフト・デザインシステム・コピー元のコードが一式そろっている状態。
+> 別リポジトリで `create-next-app` したあと、`reference/` の中身を貼れば Phase 0 が再現できる。
 
-```bash
-cd crowdfunding
-npm install
-npm run dev      # → http://localhost:3000
-```
-
-| コマンド | 内容 |
+| ディレクトリ | 内容 |
 |---|---|
-| `npm run dev` | 開発サーバー |
-| `npm run build` | 本番ビルド |
-| `npm test` | ユニットテスト（25件） |
-| `npm run typecheck` | 型チェック |
-| `npm run lint` | ESLint |
-| `npm run db:migrate` | マイグレーション（**DB が必要**） |
-| `npm run db:seed` | 初期データ投入（**DB が必要**） |
-| `npm run db:studio` | DB の中身をブラウザで確認（**DB が必要**） |
+| `docs/` | 設計ドキュメント（01〜14） |
+| `legal/` | 規約類のドラフト4点。**要弁護士レビュー** |
+| `design/` | **スタイルガイド（HTML）。ブラウザで直接開ける** |
+| `reference/` | 実装のコピー元（Prisma スキーマ・手数料計算・台帳・UI コンポーネント） |
+| `decisions.md` | 決定事項シート。**ここを埋めるところから始める** |
 
-**まだ DB につながっていない。** Neon のアカウントを作って `.env` を書けば続きから進められる
-（[docs/09-setup.md](docs/09-setup.md)）。
+> Phase 0（Next.js + Prisma + トークン + コンポーネント）は一度組んで
+> ビルド・型・Lint・テスト25件が通ることを確認済み。その成果物を `reference/` に整理してある。
+> [08-roadmap.md](docs/08-roadmap.md) に、そのとき判明した落とし穴を記録した。
 
 ---
 
@@ -49,7 +42,8 @@ npm run dev      # → http://localhost:3000
 |---|---|
 | **[decisions.md](decisions.md)** | **決定事項シート。** 規約・実装・Stripe 審査がすべてここの値を参照する。**未決定の項目を埋めるところから始める** |
 | [legal/](legal/) | 規約類のドラフト4点（利用規約・プライバシー・特商法・ガイドライン）。**要弁護士レビュー** |
-| [reference/](reference/) | 中核コード（手数料計算・状態機械・台帳・上限）。後付けが高くつく部分をコピー元として用意 |
+| [reference/](reference/) | 中核コード（手数料計算・状態機械・台帳・上限）＋ UI コンポーネント。別リポジトリへのコピー元 |
+| **[design/styleguide.html](design/styleguide.html)** | **スタイルガイド。ブラウザで直接開ける**（ビルド不要）。トークンとコンポーネントの実物 |
 
 ---
 
@@ -63,13 +57,14 @@ npm run dev      # → http://localhost:3000
 | 04 | [api.md](docs/04-api.md) | API / Server Actions 一覧・認可ルール |
 | 05 | [screens.md](docs/05-screens.md) | 画面一覧・URL 設計・各画面の構成要素 |
 | 06 | [stripe.md](docs/06-stripe.md) | Stripe Connect 設計・決済フロー・Webhook・手数料計算 |
-| 07 | [design.md](docs/07-design.md) | デザインシステム（CAMPFIRE 風・明るく万人向け）・カラー・コンポーネント |
+| 07 | [design.md](docs/07-design.md) | **デザインシステム仕様**：トークン・タイポ・コンポーネント・レイアウト・A11y・ライティング |
 | 08 | [roadmap.md](docs/08-roadmap.md) | 実装ロードマップ（Phase 0〜8）・見積り |
 | 09 | [setup.md](docs/09-setup.md) | PC でのローカル環境構築手順・環境変数一覧 |
 | 10 | [legal.md](docs/10-legal.md) | 法務・規約まわりの要確認リスト（※法的助言ではない） |
 | 11 | [payment-hardening.md](docs/11-payment-hardening.md) | **決済の堅牢化**：複式簿記台帳・状態機械・冪等性・照合・監査・安全装置 |
 | 12 | [points-gamification.md](docs/12-points-gamification.md) | **応援ポイント**：リポスト/紹介の設計・法規制の回避・不正対策 |
 | 13 | [payment-cost.md](docs/13-payment-cost.md) | **決済コスト削減**：効く順のレバー・数値モデル |
+| 14 | [design-system-stack.md](docs/14-design-system-stack.md) | **デザインシステムの技術選定**：Base UI / Radix / React Aria の比較と3層構成 |
 
 ---
 

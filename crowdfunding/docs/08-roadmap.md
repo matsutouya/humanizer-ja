@@ -4,7 +4,7 @@
 
 ---
 
-## Phase 0 — 土台をつくる（1日）✅ 完了
+## Phase 0 — 土台をつくる（1日）— 検証済み（実装は別リポジトリで再実行）
 
 - [x] `create-next-app` で TypeScript + Tailwind + App Router を選んで初期化（Next 16 / Turbopack）
 - [ ] Neon で Postgres を作成（開発用ブランチも作る）← **アカウント作成が必要。未実施**
@@ -21,20 +21,26 @@
 - [x] `lib/fees.ts` と `lib/utils.ts` のユニットテスト（25件）
 - [x] `prisma/seed.ts`（カテゴリ8件 + キルスイッチの初期値）
 - [x] `.env.example`
-- [x] `npm run build` / `typecheck` / `lint` / `test` がすべて通る
+- [x] `npm run build` / `typecheck` / `lint` / `test` がすべて通る（検証済み）
+- [x] `design/styleguide.html`（ビルド不要のスタイルガイド）
 - [ ] Vercel にデプロイして疎通確認 ← **アカウント連携が必要。未実施**
 
-**完了判定:** ✅ `npm run dev` でヘッダー・フッター付きのトップページが表示される。
-`/styleguide` でデザイントークンと手数料計算が確認できる。
+**検証結果:** ビルド・型チェック・Lint・ユニットテスト25件がすべて通ることを確認済み。
+成果物は `reference/` に整理してある（別リポジトリへのコピー元）。
 
-**残っているのはアカウント作成が必要な3つだけ**（Neon / マイグレーション / Vercel）。
-[09-setup.md](09-setup.md) §0 のアカウントを作れば、そのまま続きから進められる。
+**別リポジトリでの再現手順:**
+1. [09-setup.md](09-setup.md) §1 のコマンドで `create-next-app`
+2. `reference/lib/` `reference/ui/` `reference/prisma/` を貼る
+3. Neon のアカウントを作って `.env` を書く
+4. `npm run db:migrate && npm run db:seed`
+
+**アカウント作成が必要な3つは未実施**（Neon / マイグレーション / Vercel）。
 
 ⚠️ **Phase 0 で判明した計画との差分**（[02-architecture.md](02-architecture.md) に反映済み）:
 - Prisma 7 では接続 URL を `schema.prisma` に書けない。`prisma.config.ts` に書き、
   さらにドライバアダプタ（`@prisma/adapter-pg`）が必須
 - CLI 用（`DIRECT_URL`）とアプリ用（`DATABASE_URL`）で接続先が分かれる
-- shadcn/ui は未導入。必要になる Phase 2 で再検討
+- shadcn/ui は未導入。**Phase 2 で Base UI ＋ shadcn CLI を採用予定**（[14-design-system-stack.md](14-design-system-stack.md)）
 
 ---
 
@@ -55,6 +61,10 @@
 
 ## Phase 2 — プロジェクト CRUD（3〜4日）
 
+**このフェーズの頭で UI ライブラリを確定する。** [14-design-system-stack.md](14-design-system-stack.md) §7。
+
+- [ ] **Base UI で Dialog と Combobox を試作**（日本語入力の実挙動を実機確認）
+- [ ] 問題なければ `npx shadcn@latest add …` で必要分を取り込み、トークンへ寄せる
 - [ ] カテゴリの seed
 - [ ] 出品者申請フォーム → 運営承認 → CREATOR 昇格
 - [ ] プロジェクト作成（下書き）
