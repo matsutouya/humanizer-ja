@@ -91,6 +91,11 @@ enum PayoutStatus {
   FAILED
 }
 
+enum CreatorDisclosureMode {
+  PUBLIC      // 住所・電話番号を常時公開
+  ON_REQUEST  // 請求があれば遅滞なく開示
+}
+
 enum CreatorOnboardingStatus {
   NOT_STARTED
   IN_PROGRESS     // Stripe オンボーディング途中
@@ -180,8 +185,18 @@ model CreatorProfile {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   displayName String   // 出品者名（個人名・団体名）
-  legalName   String?  // 特商法表記用の氏名
   isBusiness  Boolean  @default(false)
+
+  // ── 特商法表記用 ──────────────────────────────
+  // プロジェクト詳細ページに出品者ごとの特商法表記を出すために必要。
+  // 詳細: legal/tokushoho.md §3
+  legalName   String?  // 氏名または名称
+  postalCode  String?
+  address     String?
+  phoneNumber String?
+  /// 住所・電話番号を常時公開するか、請求時に開示するか
+  /// ⚖️ どちらが必要かは弁護士確認（decisions.md G-5）。出品者の獲得に直結する
+  disclosureMode CreatorDisclosureMode @default(ON_REQUEST)
 
   // Stripe Connect
   stripeAccountId    String?                 @unique
