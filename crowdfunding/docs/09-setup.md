@@ -30,8 +30,9 @@
 
 ## 1. プロジェクト作成
 
-> ✅ **Phase 0 実施済み。** リポジトリの `crowdfunding/` がそのまま動くプロジェクトになっている。
-> `git clone` して `npm install` すれば、この章はスキップできる。以下は再現手順の記録。
+> 📋 **このリポジトリは計画。実装は別リポジトリで行う。**
+> 下記の手順は一度実行して動作を確認済み。成果物は `reference/` にコピー元として整理してある。
+> 手順どおりに作ったあと、`reference/` の中身を貼れば Phase 0 が再現できる（[reference/README.md](../reference/README.md)）。
 
 ```bash
 npx create-next-app@latest fundbeat \
@@ -57,8 +58,8 @@ npm i -D prisma tsx vitest dotenv @types/pg
 | `@aws-sdk/client-s3` `@aws-sdk/s3-request-presigner` | Phase 2 |
 | `@playwright/test` | Phase 5 |
 
-shadcn/ui は Phase 0 では導入していない（[02-architecture.md](02-architecture.md) 参照）。
-必要になったら `npx shadcn@latest init` から始める。
+shadcn/ui は Phase 0 では導入していない。
+**Phase 2 で Base UI ＋ shadcn CLI を採用する**（選定理由は [14-design-system-stack.md](14-design-system-stack.md)）。
 
 ---
 
@@ -204,7 +205,7 @@ CRON_SECRET="..."   # openssl rand -hex 32
 **`DATABASE_URL` と `DIRECT_URL` の使い分けは §2 のとおり。**
 `schema.prisma` にはどちらも書かない（Prisma 7 では書けない）。
 
-`.env.example` には**同じキーを値を空にして**コミットしておく（リポジトリに用意済み）。
+`.env.example` には**同じキーを値を空にして**コミットしておく（`reference/.env.example` にある）。
 
 ---
 
