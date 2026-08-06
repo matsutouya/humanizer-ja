@@ -203,6 +203,12 @@ const session = await stripe.checkout.sessions.create({
 
 **JPY は最小通貨単位が「円」そのもの。** `unit_amount: 10000` は ¥10,000。100 倍しない（USD の感覚で書くと 100 倍請求される）。
 
+> ⚠️ **ただし、上の `transfer_data` を使った即時送金は最終形ではない。**
+> 決済と同時に出品者へ送金すると、返金・チャージバックの原資が消える（持ち逃げ・出品者残高不足）。
+> **実装では `transfer_data` を指定せず、募集終了+7日にプロジェクト単位でまとめて `transfers.create` する。**
+> 資金リスク対策とコスト削減が同じ実装で両立する。
+> → [11-payment-hardening.md](11-payment-hardening.md) §8、[13-payment-cost.md](13-payment-cost.md) §2
+
 ---
 
 ## 5. 支援フロー B: All-or-Nothing（目標達成型）
