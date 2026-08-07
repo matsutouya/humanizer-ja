@@ -1,0 +1,259 @@
+# 08. 実装ロードマップ
+
+工数は「集中して作業できる日」を1日とした目安。片手間なら 2〜3 倍かかる。
+
+---
+
+## Phase 0 — 土台をつくる（1日）— 検証済み（実装は別リポジトリで再実行）
+
+- [x] `create-next-app` で TypeScript + Tailwind + App Router を選んで初期化（Next 16 / Turbopack）
+- [ ] Neon で Postgres を作成（開発用ブランチも作る）← **アカウント作成が必要。未実施**
+- [x] Prisma 導入 → [03-db-schema.md](03-db-schema.md) のスキーマを `schema.prisma` に反映
+- [x] `prisma.config.ts` を作成（Prisma 7 では URL をここに書く）
+- [x] `npx prisma validate` / `generate` が通る
+- [ ] `prisma migrate dev --name init` ← **DB が必要。未実施**
+- [x] `lib/db.ts`（Prisma シングルトン + ドライバアダプタ）
+- [x] [07-design.md](07-design.md) のカラートークンを `globals.css` に設定
+- [x] Header / Footer / コンテナのレイアウト
+- [x] トップページ（ヒーロー・カテゴリ・出品導線）
+- [x] `/styleguide`（DB なしでデザインを検証できるページ）
+- [x] `lib/fees.ts` `limits.ts` `pledge-state.ts` `ledger.ts` を配置
+- [x] `lib/fees.ts` と `lib/utils.ts` のユニットテスト（25件）
+- [x] `prisma/seed.ts`（カテゴリ8件 + キルスイッチの初期値）
+- [x] `.env.example`
+- [x] `npm run build` / `typecheck` / `lint` / `test` がすべて通る（検証済み）
+- [x] `design/styleguide.html`（ビルド不要のスタイルガイド）
+- [ ] Vercel にデプロイして疎通確認 ← **アカウント連携が必要。未実施**
+
+**検証結果:** ビルド・型チェック・Lint・ユニットテスト25件がすべて通ることを確認済み。
+成果物は `reference/` に整理してある（別リポジトリへのコピー元）。
+
+**別リポジトリでの再現手順:**
+1. [09-setup.md](09-setup.md) §1 のコマンドで `create-next-app`
+2. `reference/lib/` `reference/ui/` `reference/prisma/` を貼る
+3. Neon のアカウントを作って `.env` を書く
+4. `npm run db:migrate && npm run db:seed`
+
+**アカウント作成が必要な3つは未実施**（Neon / マイグレーション / Vercel）。
+
+⚠️ **Phase 0 で判明した計画との差分**（[02-architecture.md](02-architecture.md) に反映済み）:
+- Prisma 7 では接続 URL を `schema.prisma` に書けない。`prisma.config.ts` に書き、
+  さらにドライバアダプタ（`@prisma/adapter-pg`）が必須
+- CLI 用（`DIRECT_URL`）とアプリ用（`DATABASE_URL`）で接続先が分かれる
+- shadcn/ui は未導入。**Phase 2 で Base UI ＋ shadcn CLI を採用予定**（[14-design-system-stack.md](14-design-system-stack.md)）
+
+---
+
+## Phase 1 — 認証（1〜2日）
+
+- [ ] Auth.js v5 + Prisma アダプタ導入
+- [ ] メールマジックリンク（Resend）
+- [ ] Google プロバイダ（任意）
+- [ ] ログイン / ログアウト / セッション取得ヘルパー
+- [ ] `middleware.ts` で `/dashboard` `/creator` `/admin` を保護
+- [ ] `lib/permissions.ts` に認可ヘルパー（`requireUser` / `requireCreator` / `requireAdmin`）
+- [ ] プロフィール編集画面
+- [ ] seed で ADMIN ユーザーを作成
+
+**完了判定:** メールに届いたリンクでログインでき、`/admin` に一般ユーザーが入れない。
+
+---
+
+## Phase 2 — プロジェクト CRUD（3〜4日）
+
+**このフェーズの頭で UI ライブラリを確定する。** [14-design-system-stack.md](14-design-system-stack.md) §7。
+
+- [ ] **Base UI で Dialog と Combobox を試作**（日本語入力の実挙動を実機確認）
+- [ ] 問題なければ `npx shadcn@latest add …` で必要分を取り込み、トークンへ寄せる
+- [ ] カテゴリの seed
+- [ ] 出品者申請フォーム → 運営承認 → CREATOR 昇格
+- [ ] プロジェクト作成（下書き）
+- [ ] 基本情報編集フォーム（Zod バリデーション）
+- [ ] 本文エディタ（最初は Markdown のテキストエリアで十分。リッチエディタは後回し）
+- [ ] 画像アップロード（R2 署名付き URL）
+- [ ] リターン CRUD・並び替え
+- [ ] プレビュー画面
+- [ ] 審査申請 → `IN_REVIEW`
+- [ ] 運営の審査キュー（承認 / 差戻し）
+
+**完了判定:** 出品者としてプロジェクトを作り、運営として承認できる。
+
+⚠️ ここで `updateProjectFunding` の「公開後は変更不可」ガードを**サーバー側に**入れておく。後付けだと必ず漏れる。
+
+---
+
+## Phase 3 — 公開まわり（2〜3日）
+
+- [ ] `ProjectCard` / `ProgressBar` / `RewardCard` などの共通コンポーネント
+- [ ] トップページ（注目・新着・締切間近・カテゴリ）
+- [ ] プロジェクト一覧・検索・カテゴリ絞り込み・ソート
+- [ ] プロジェクト詳細（2カラム / モバイル固定 CTA）
+- [ ] 出品者プロフィールページ
+- [ ] 動的 OGP 画像
+- [ ] 静的ページ（利用規約・プライバシー・特商法・ガイドライン）の枠だけ作る
+
+**完了判定:** 承認したプロジェクトが一覧に出て、詳細が読め、SNS シェアで OGP が出る。
+**ここで一度友達に見せて反応を見る。** 決済がなくても「良さそう」かは分かる。
+
+---
+
+## Phase 4 — Stripe Connect オンボーディング（2日）
+
+- [ ] Stripe アカウント開設・テストキー取得・Connect 有効化
+- [ ] `lib/stripe.ts`
+- [ ] `lib/fees.ts`（[06-stripe.md](06-stripe.md) の計算式）＋ **ユニットテスト**
+- [ ] Connect Express アカウント作成 + Account Link 発行
+- [ ] `/creator/payouts` 画面（状態表示・再開リンク）
+- [ ] Webhook 受け口を作り `account.updated` を処理
+- [ ] Stripe CLI でローカル Webhook 転送を確認
+- [ ] `payoutsEnabled === false` なら審査申請できないガード
+
+**完了判定:** テストモードでオンボーディングを完走し、DB の `payoutsEnabled` が `true` になる。
+
+---
+
+## Phase 5 — 支援フロー All-in（3〜4日）★最初のマイルストーン
+
+**このフェーズから [11-payment-hardening.md](11-payment-hardening.md) を並行して読むこと。**
+台帳・状態機械・Outbox は後付けが非常に高くつくので、最初の支援フローと同時に入れる。
+
+- [ ] **`LedgerJournal` / `LedgerEntry` と `postJournal`（合計0検証つき）** ★最初に
+- [ ] **`transitionPledge`（状態機械）**
+- [ ] **`OutboxMessage` + 配送 Cron**
+- [ ] `/pledge/[slug]` リターン選択・確認画面
+- [ ] 配送先入力フォーム
+- [ ] `createPledgeCheckout`（[04-api.md](04-api.md) の処理順どおりに）
+- [ ] 在庫の条件付き UPDATE
+- [ ] Checkout Session 作成（mode=payment / destination charge）
+- [ ] Webhook `checkout.session.completed` → CAPTURED + 集計更新
+- [ ] Webhook `checkout.session.expired` → 在庫解放
+- [ ] 支援完了画面
+- [ ] 支援完了メール（支援者・出品者の両方）
+- [ ] 支援履歴ページ
+- [ ] Cron: `release-stale-pledges`
+- [ ] Cron: `sync-stale-pledges`（Webhook が届かなかった場合の補完ポーリング）
+- [ ] Cron: `reconcile`（整合性チェック・不一致で通知）
+- [ ] **送金を決済と分離**（`transfer_data` を使わず、募集終了+7日にまとめて transfer）
+- [ ] 二重支払い防止の4層
+- [ ] 金額上限・レート制限・`SystemFlag`（キルスイッチ）
+- [ ] `AuditLog`（返金・審査・ロール変更を記録）
+- [ ] statement descriptor をサービス名に設定
+- [ ] 出品者ダッシュボードに受取見込額を表示
+
+**完了判定:** テストカードで支援でき、進捗バーが動き、メールが届き、Stripe ダッシュボードで destination charge と application fee が確認できる。
+
+🎉 **ここまでで「自分たちの曲プロジェクト」を実際に走らせられる。**
+
+---
+
+## Phase 6 — All-or-Nothing（3日）
+
+- [ ] Checkout Session（mode=setup）
+- [ ] Webhook で `payment_method` を保存 → AUTHORIZED
+- [ ] Cron: `close-projects`（締切判定・一括決済・不成立処理）
+- [ ] `idempotency_key` を必ず付ける
+- [ ] Cron: `retry-payments`（3回まで）
+- [ ] 決済失敗の督促メール・カード変更ページ
+- [ ] 支援キャンセル（募集中のみ）
+- [ ] 支援画面に「今は請求されません」の明記
+- [ ] Payout レコード生成
+
+**完了判定:** 締切を過ぎたテストプロジェクトが Cron で自動的に成立/不成立になり、成立時だけ決済が走る。`4000 0000 0000 0341` で失敗パスも確認する。
+
+---
+
+## Phase 7 — コミュニティ機能（2〜3日）
+
+- [ ] 活動報告の投稿・一覧（支援者限定公開の出し分け）
+- [ ] コメント投稿・表示
+- [ ] 支援者一覧ページ（匿名対応）
+- [ ] 配送先 CSV 出力（成立後のみ）
+- [ ] 通報フォーム
+- [ ] 各種メール通知の整備（目標達成・締切間近・活動報告）
+
+---
+
+## Phase 8 — 運営体制と本番化（2〜3日 + 待ち時間）
+
+- [ ] 管理画面の残り（全プロジェクト・全支援・返金操作・通報対応）
+- [ ] 集計値の突き合わせバッチ
+- [ ] Sentry などのエラー監視
+- [ ] 利用規約・プライバシーポリシー・特商法表記・ガイドラインの**本文を書く**（[10-legal.md](10-legal.md)）
+- [ ] Stripe の本番審査申請（**時間がかかる。早めに出す**）
+- [ ] 独自ドメイン設定・DNS・メール送信ドメイン認証（SPF/DKIM）
+- [ ] [06-stripe.md](06-stripe.md) の実装チェックリストを全項目確認
+- [ ] 本番環境変数の設定
+- [ ] 自分たちのプロジェクトを第1号として公開
+
+---
+
+## Phase 9 — 応援ポイント / 拡散の仕組み（3〜5日）
+
+**決済が固まってから。** 詳細と法務上の制約は [12-points-gamification.md](12-points-gamification.md)。
+
+### 9-a 紹介リンクだけ先に作る（法務論点なし・1日）
+
+- [ ] シェアボタン → 紹介コード付き URL（`?ref=`）を生成
+- [ ] `ReferralClick` の記録（IP はハッシュ化して保存）
+- [ ] 支援成立時に紹介元を紐づけ
+- [ ] 「あなたのシェアから○人が見て、○人が支援しました」の可視化
+
+**ここまではポイント（対価）を出さないので、ステマ規制も景品規制も関係しない。**
+効果を測ってから 9-b に進むか判断する。
+
+### 9-b 以降（規約整備が前提）
+
+- [ ] `PointAccount` / `PointTransaction`（append-only・`externalRef` に unique）
+- [ ] 獲得ルール・1日上限・自己紹介の遮断・7日保留
+- [ ] サポーターランク・バッジ（**表示のみ。交換機能を作らない**）
+- [ ] ランキング（全体・案件別・シーズン制）
+- [ ] シェア申告 + `#PR` テンプレート
+- [ ] 整合性チェックに残高照合を追加
+- [ ] 規約にポイント条項を追加
+- [ ] **キャンペーン開始前に弁護士レビュー**
+
+保留（弁護士確認が済むまで着手しない）: 交換所・抽選機能
+
+---
+
+## 並行して進めておくこと
+
+Phase 0 の時点から始めておくと詰まらない。
+
+| いつ | やること | 理由 |
+|---|---|---|
+| すぐ | サービス名を決める・ドメイン取得・商標検索 | 後から変えると全部やり直し |
+| Phase 3 まで | Stripe アカウント開設と本番審査の申請準備 | 審査に日数がかかる |
+| Phase 5 まで | 規約類のドラフト作成 | 公開に必須。書き始めると意外と重い |
+| ずっと | 自分たちの曲プロジェクトの中身（文章・画像・リターン設計） | **サイトより中身が大事。** 第1号が魅力的でないと誰も来ない |
+
+---
+
+## テスト方針
+
+全部書くのは無理。**壊れると金銭事故になるところだけ**厚くする。
+
+| 対象 | 種類 | 優先度 |
+|---|---|---|
+| `lib/fees.ts` の手数料計算 | ユニット（Vitest） | **必須** |
+| 在庫の同時確保（並行リクエスト） | 統合 | **必須** |
+| Webhook の冪等性（同じイベント2回） | 統合 | **必須** |
+| 締切バッチの成立/不成立分岐 | 統合 | **必須** |
+| 認可（他人のプロジェクトを編集できない） | 統合 | 高 |
+| 支援フロー通し | E2E（Playwright + Stripe テストカード） | 中 |
+| 画面の見た目 | 手動 | 低 |
+
+---
+
+## やらないことを守る
+
+Phase の途中で「ついでにこれも」が必ず出てくる。以下は**全部 Phase 8 の後**に回す。
+
+- ダークモード
+- リッチテキストエディタ
+- おすすめ・ランキングのアルゴリズム
+- フォロー機能・通知センター
+- 多言語対応
+- スマホアプリ
+
+**Phase 5 まで最短で到達することだけを考える。**

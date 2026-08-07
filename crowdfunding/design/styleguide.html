@@ -1,0 +1,1211 @@
+<title>FUNDBEAT デザインシステム仕様書</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   FUNDBEAT Design System — Styleguide
+   docs/07-design.md の視覚的な対応物。ビルド不要。ブラウザで直接開ける。
+
+   2つの色系統がある:
+     --doc-*      この仕様書自身の見た目。ライト／ダーク両対応
+     --surface-* 他  プロダクトのトークン。常にライト（v1 はライトのみのため）
+   プレビュー枠の中だけが「プロダクトの面」。枠の外は「仕様書の面」。
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── プロダクトのトークン（07-design.md §1.2）───────────── */
+  --surface-page:   #ffffff;
+  --surface-sunken: #f6f8fa;
+  --surface-inset:  #eef1f5;
+  --border-subtle:  #e2e7ee;
+  --border-default: #cbd3de;
+  --border-strong:  #9aa5b5;
+
+  --text-primary:   #161a21;
+  --text-secondary: #3d4552;
+  --text-tertiary:  #6b7688;
+  --text-disabled:  #9aa5b5;
+
+  --accent-bg-subtle:    #fff2f0;
+  --accent-bg-muted:     #ffe1dd;
+  --accent-solid:        #dc3520;
+  --accent-solid-hover:  #b82717;
+  --accent-solid-active: #961f13;
+  --accent-text:         #b82717;
+
+  --success-bg:#e9f7f0; --success-fg:#0a6543; --success-solid:#0d7f53;
+  --warning-bg:#fff6e6; --warning-fg:#7f5100; --warning-solid:#a06600;
+  --danger-bg: #fdeceb; --danger-fg: #9c1a1a; --danger-solid: #c02020;
+  --info-bg:   #eaf2fd; --info-fg:   #164e9b; --info-solid:   #1a5fbf;
+
+  --radius-xs:4px; --radius-sm:8px; --radius-md:12px; --radius-lg:16px;
+  --shadow-1: 0 1px 2px rgb(16 19 26 / .06);
+  --shadow-2: 0 4px 12px rgb(16 19 26 / .08);
+  --shadow-3: 0 8px 24px rgb(16 19 26 / .12);
+  --shadow-4: 0 24px 48px rgb(16 19 26 / .18);
+
+  --ease-standard: cubic-bezier(.2,0,0,1);
+
+  /* ── この仕様書自身（ライト）──────────────────────────── */
+  --doc-bg:        #ffffff;
+  --doc-bg-sunken: #f6f8fa;
+  --doc-fg:        #161a21;
+  --doc-fg-2:      #3d4552;
+  --doc-fg-3:      #6b7688;
+  --doc-rule:      #e2e7ee;
+  --doc-rule-2:    #cbd3de;
+  --doc-accent:    #b82717;
+  --doc-code-bg:   #f6f8fa;
+
+  --font-sans: "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",
+               "Yu Gothic Medium","Meiryo",system-ui,-apple-system,sans-serif;
+  --font-mono: ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,
+               "Liberation Mono",monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --doc-bg:        #0e1116;
+    --doc-bg-sunken: #151a21;
+    --doc-fg:        #e8ecf2;
+    --doc-fg-2:      #b6c0cd;
+    --doc-fg-3:      #8b96a5;
+    --doc-rule:      #232a34;
+    --doc-rule-2:    #333c49;
+    --doc-accent:    #ff8f7f;
+    --doc-code-bg:   #171d25;
+  }
+}
+:root[data-theme="dark"] {
+  --doc-bg:#0e1116; --doc-bg-sunken:#151a21;
+  --doc-fg:#e8ecf2; --doc-fg-2:#b6c0cd; --doc-fg-3:#8b96a5;
+  --doc-rule:#232a34; --doc-rule-2:#333c49;
+  --doc-accent:#ff8f7f; --doc-code-bg:#171d25;
+}
+:root[data-theme="light"] {
+  --doc-bg:#ffffff; --doc-bg-sunken:#f6f8fa;
+  --doc-fg:#161a21; --doc-fg-2:#3d4552; --doc-fg-3:#6b7688;
+  --doc-rule:#e2e7ee; --doc-rule-2:#cbd3de;
+  --doc-accent:#b82717; --doc-code-bg:#f6f8fa;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--doc-bg);
+  color: var(--doc-fg-2);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── ページ骨格 ─────────────────────────────────────────── */
+.wrap {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px 120px;
+}
+@media (min-width: 1000px) {
+  .wrap { grid-template-columns: 208px minmax(0,1fr); gap: 56px; padding: 0 32px 160px; }
+}
+
+/* ── ヘッダー ───────────────────────────────────────────── */
+.masthead {
+  grid-column: 1 / -1;
+  border-bottom: 1px solid var(--doc-rule);
+  padding: 56px 0 32px;
+  margin-bottom: 48px;
+}
+.masthead .eyebrow { margin-bottom: 20px; }
+.masthead h1 {
+  margin: 0;
+  font-size: clamp(30px, 5.2vw, 46px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  color: var(--doc-fg);
+  text-wrap: balance;
+}
+.masthead p {
+  margin: 14px 0 0;
+  max-width: 34em;
+  color: var(--doc-fg-3);
+}
+.meta {
+  display: flex; flex-wrap: wrap; gap: 8px 20px;
+  margin-top: 26px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--doc-fg-3);
+}
+.meta b { color: var(--doc-fg-2); font-weight: 500; }
+
+/* ── 目次 ───────────────────────────────────────────────── */
+.toc { display: none; }
+@media (min-width: 1000px) {
+  .toc {
+    display: block;
+    position: sticky; top: 24px;
+    align-self: start;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    padding-bottom: 24px;
+  }
+}
+.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.toc a {
+  display: flex; gap: 10px;
+  padding: 5px 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--doc-fg-3);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.toc a:hover { color: var(--doc-accent); }
+.toc a span { color: var(--doc-rule-2); flex: none; }
+
+/* ── セクション ─────────────────────────────────────────── */
+section { padding-top: 8px; margin-bottom: 76px; scroll-margin-top: 24px; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--doc-fg-3);
+  display: flex; align-items: center; gap: 10px;
+}
+.eyebrow::after {
+  content: ""; flex: 1; height: 1px; background: var(--doc-rule);
+}
+
+h2 {
+  margin: 14px 0 0;
+  font-size: 27px;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  font-weight: 700;
+  color: var(--doc-fg);
+}
+h3 {
+  margin: 44px 0 0;
+  font-size: 17px;
+  line-height: 1.5;
+  font-weight: 700;
+  color: var(--doc-fg);
+}
+h4 {
+  margin: 28px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  color: var(--doc-fg-3);
+}
+section > p, h3 + p, h4 + p { margin: 12px 0 0; max-width: 36em; }
+.lede { color: var(--doc-fg-2); }
+
+code {
+  font-family: var(--font-mono);
+  font-size: .86em;
+  background: var(--doc-code-bg);
+  border: 1px solid var(--doc-rule);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: var(--doc-fg);
+}
+
+.note {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-left: 2px solid var(--doc-accent);
+  background: var(--doc-bg-sunken);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 14px;
+  max-width: 40em;
+}
+.note b { color: var(--doc-fg); }
+
+/* ── プレビュー枠 ────────────────────────────────────────
+   この中だけがプロダクトの面。常にライト。 */
+.canvas {
+  margin-top: 22px;
+  border: 1px solid var(--doc-rule-2);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-page);
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+.canvas__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 7px 12px;
+  background: var(--doc-bg-sunken);
+  border-bottom: 1px solid var(--doc-rule);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--doc-fg-3);
+}
+.canvas__body { padding: 26px 24px; }
+.canvas__body.on-sunken { background: var(--surface-sunken); }
+.canvas__body.tight { padding: 18px; }
+
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+
+/* ── 表 ─────────────────────────────────────────────────── */
+.table-scroll { margin-top: 22px; overflow-x: auto; border: 1px solid var(--doc-rule); border-radius: var(--radius-sm); }
+table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 13.5px; }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--doc-rule); }
+thead th {
+  font-family: var(--font-mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--doc-fg-3); background: var(--doc-bg-sunken);
+  position: sticky; top: 0;
+}
+tbody tr:last-child td { border-bottom: none; }
+td.mono, th.mono { font-family: var(--font-mono); font-size: 12px; }
+td.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.pass { color: var(--success-fg); font-weight: 600; }
+.fail { color: var(--danger-fg); font-weight: 600; }
+:root[data-theme="dark"] .pass, :root[data-theme="dark"] .fail { filter: brightness(1.6); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pass,
+  :root:not([data-theme="light"]) .fail { filter: brightness(1.6); }
+}
+
+/* ── 色見本 ─────────────────────────────────────────────── */
+.ramp { display: grid; grid-template-columns: repeat(auto-fit, minmax(108px,1fr)); gap: 8px; margin-top: 20px; }
+.chip { border: 1px solid var(--doc-rule); border-radius: var(--radius-sm); overflow: hidden; }
+.chip i { display: block; height: 60px; }
+.chip figcaption {
+  padding: 7px 9px 9px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--doc-fg-3);
+  background: var(--doc-bg);
+}
+.chip figcaption b { display: block; color: var(--doc-fg); font-weight: 600; }
+.chip figcaption em { font-style: normal; font-variant-numeric: tabular-nums; }
+
+/* ══════════════════════════════════════════════════════════
+   ここから下: プロダクトのコンポーネント。.canvas の中でのみ使う
+   ══════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 40px; padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  transition: background-color 100ms var(--ease-standard),
+              box-shadow 200ms var(--ease-standard),
+              transform 100ms var(--ease-standard);
+}
+.btn--sm { height: 32px; padding: 0 12px; font-size: 13px; }
+.btn--lg { height: 48px; padding: 0 24px; font-size: 16px; font-weight: 700; }
+/* 幅100%のときは左右パディングを詰める。
+   狭いサイドバー（290px）で「このプロジェクトを支援する」が2行に折り返すのを防ぐ */
+.btn--block { width: 100%; padding-inline: 12px; }
+
+.btn--primary { background: var(--accent-solid); color: #fff; }
+.btn--primary:hover { background: var(--accent-solid-hover); box-shadow: var(--shadow-2); }
+.btn--primary:active { background: var(--accent-solid-active); transform: translateY(1px); }
+
+.btn--secondary { background: var(--surface-page); color: var(--text-primary); border-color: var(--border-default); }
+.btn--secondary:hover { border-color: var(--border-strong); background: var(--surface-sunken); }
+
+.btn--ghost { background: transparent; color: var(--text-secondary); }
+.btn--ghost:hover { background: var(--surface-inset); color: var(--text-primary); }
+
+.btn--danger { background: var(--danger-solid); color: #fff; }
+.btn--danger:hover { background: #9c1a1a; }
+
+.btn--link { background: none; color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; padding: 0; height: auto; }
+
+.btn:disabled, .btn[aria-disabled="true"] {
+  background: var(--surface-inset); color: var(--text-disabled);
+  border-color: transparent; cursor: not-allowed; box-shadow: none; transform: none;
+}
+.is-focus { outline: 2px solid var(--accent-solid); outline-offset: 2px; }
+
+.spinner {
+  width: 15px; height: 15px; flex: none;
+  border: 2px solid currentColor; border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  opacity: .85;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 22px; padding: 0 8px;
+  border-radius: 999px;
+  font-size: 12px; font-weight: 600; line-height: 1;
+}
+.badge--neutral { background: var(--surface-sunken); color: var(--text-secondary); }
+.badge--success { background: var(--success-bg); color: var(--success-fg); }
+.badge--warning { background: var(--warning-bg); color: var(--warning-fg); }
+.badge--danger  { background: var(--danger-bg);  color: var(--danger-fg); }
+.badge--info    { background: var(--info-bg);    color: var(--info-fg); }
+
+.progress { height: 6px; border-radius: 999px; background: var(--surface-inset); overflow: hidden; }
+.progress--lg { height: 8px; }
+.progress > i { display: block; height: 100%; border-radius: 999px; background: var(--accent-solid); transition: width 500ms var(--ease-standard); }
+.progress > i.done { background: var(--success-solid); }
+
+.money { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; }
+.money--xl { font-size: 32px; line-height: 1.1; }
+.money--lg { font-size: 22px; line-height: 1.15; }
+.money--md { font-size: 17px; line-height: 1.2; }
+.metaline { font-size: 13px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+
+/* プロジェクトカード */
+.pcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px,1fr)); gap: 16px; }
+.pcard {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-page);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+  transition: box-shadow 200ms var(--ease-standard);
+}
+.pcard:hover { box-shadow: var(--shadow-2); }
+.pcard__media {
+  position: relative; aspect-ratio: 16/9;
+  background: var(--surface-inset);
+  display: grid; place-items: center;
+  font-size: 30px;
+  overflow: hidden;
+}
+.pcard__cat {
+  position: absolute; left: 10px; top: 10px;
+  background: rgb(255 255 255 / .92);
+  backdrop-filter: blur(6px);
+  border-radius: 999px; padding: 3px 9px;
+  font-size: 11.5px; font-weight: 600; color: var(--text-secondary);
+}
+.pcard__body { padding: 14px; display: flex; flex-direction: column; gap: 7px; }
+.pcard__creator { font-size: 12.5px; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pcard__title {
+  margin: 0; font-size: 15px; font-weight: 600; line-height: 1.5; color: var(--text-primary);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.pcard__amount { display: flex; align-items: baseline; gap: 8px; }
+.pcard__rate { font-size: 13.5px; font-weight: 600; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+
+/* リターンカード */
+.reward {
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  background: var(--surface-page); padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: border-color 150ms var(--ease-standard);
+}
+.reward:hover { border-color: var(--border-strong); }
+.reward--selected { border: 2px solid var(--accent-solid); background: var(--accent-bg-subtle); padding: 15px; }
+.reward--soldout { opacity: .55; }
+.reward__title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.reward__desc { font-size: 13.5px; color: var(--text-secondary); line-height: 1.7; margin: 0; }
+.reward__facts { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: var(--text-tertiary); }
+
+/* フォーム */
+.field { display: flex; flex-direction: column; gap: 8px; max-width: 420px; }
+.field__label { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+.req { background: var(--danger-bg); color: var(--danger-fg); border-radius: var(--radius-xs); padding: 1px 6px; font-size: 11px; }
+.input {
+  height: 40px; padding: 0 12px;
+  border: 1px solid var(--border-default); border-radius: var(--radius-sm);
+  background: var(--surface-page); color: var(--text-primary);
+  font-family: inherit; font-size: 16px;
+  transition: border-color 150ms var(--ease-standard);
+}
+.input::placeholder { color: var(--text-disabled); }
+.input:focus { outline: 2px solid var(--accent-solid); outline-offset: 1px; border-color: var(--accent-solid); }
+.input--error { border-color: var(--danger-solid); }
+.help { font-size: 12.5px; color: var(--text-tertiary); }
+.err { font-size: 12.5px; color: var(--danger-fg); font-weight: 500; }
+
+/* アラート */
+.alert {
+  display: flex; gap: 10px; padding: 12px 14px;
+  border-radius: var(--radius-sm); font-size: 13.5px; line-height: 1.7;
+}
+.alert b { display: block; }
+.alert--warning { background: var(--warning-bg); color: var(--warning-fg); }
+.alert--danger  { background: var(--danger-bg);  color: var(--danger-fg); }
+.alert--info    { background: var(--info-bg);    color: var(--info-fg); }
+.alert--success { background: var(--success-bg); color: var(--success-fg); }
+
+/* 空状態 */
+.empty {
+  border: 1px dashed var(--border-default); border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  padding: 40px 24px; text-align: center;
+}
+.empty h5 { margin: 12px 0 0; font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.empty p { margin: 6px auto 0; max-width: 30em; font-size: 13.5px; color: var(--text-tertiary); }
+.empty .row { justify-content: center; margin-top: 18px; }
+
+/* スケルトン */
+.skel { background: var(--surface-inset); border-radius: var(--radius-xs); position: relative; overflow: hidden; }
+.skel::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .65), transparent);
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer { from { transform: translateX(-100%);} to { transform: translateX(100%);} }
+
+/* プロジェクト詳細の縮図 */
+.layout { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 720px) { .layout { grid-template-columns: 2fr 1fr; } }
+.layout__main, .layout__side { display: flex; flex-direction: column; gap: 12px; }
+.slot {
+  border: 1px dashed var(--border-default); border-radius: var(--radius-sm);
+  padding: 12px; font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);
+  background: var(--surface-page);
+}
+.slot--filled { border-style: solid; border-color: var(--border-subtle); background: var(--surface-page); box-shadow: var(--shadow-1); font-family: var(--font-sans); }
+.slot--sticky { border-color: var(--accent-solid); color: var(--accent-text); }
+
+/* モバイル固定CTA */
+.mobilebar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--surface-page);
+  box-shadow: 0 -4px 12px rgb(16 19 26 / .06);
+}
+.phone { max-width: 340px; margin: 0 auto; border: 1px solid var(--doc-rule-2); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface-page); }
+
+.spacescale { display: flex; align-items: flex-end; gap: 6px; flex-wrap: wrap; }
+.spacescale div { text-align: center; font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); }
+.spacescale i { display: block; background: var(--accent-bg-muted); border: 1px solid var(--accent-solid); border-radius: 2px; margin-bottom: 5px; }
+
+.radii { display: flex; gap: 14px; flex-wrap: wrap; }
+.radii div { text-align: center; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-tertiary); }
+.radii i { display: block; width: 68px; height: 48px; background: var(--surface-inset); border: 1px solid var(--border-default); margin-bottom: 6px; }
+
+.elevs { display: flex; gap: 16px; flex-wrap: wrap; }
+.elevs div { text-align: center; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-tertiary); }
+.elevs i { display: block; width: 92px; height: 56px; background: var(--surface-page); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); margin-bottom: 8px; }
+
+.specimen { display: flex; flex-direction: column; gap: 16px; }
+.specimen > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 14px; }
+.specimen > div:last-child { border-bottom: none; padding-bottom: 0; }
+.specimen small { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-tertiary); flex: none; width: 168px; }
+.sp-text { color: var(--text-primary); }
+
+.checklist { margin: 20px 0 0; padding: 0; list-style: none; display: grid; gap: 7px; max-width: 46em; }
+.checklist li { display: flex; gap: 10px; font-size: 14px; }
+.checklist li::before { content: "☐"; color: var(--doc-fg-3); flex: none; }
+
+footer.doc {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--doc-rule);
+  padding-top: 24px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--doc-fg-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">FUNDBEAT — Design System v1.0</div>
+    <h1>金額が主役の、白基調マーケットプレイス</h1>
+    <p class="lede">
+      購入型クラウドファンディングのためのデザインシステム。
+      この文書は <code>docs/07-design.md</code> の視覚的な対応物で、ビルド不要でブラウザから開ける。
+      実装と食い違ったときは、実装のほうを直す。
+    </p>
+    <div class="meta">
+      <span><b>基準</b> WCAG 2.2 AA</span>
+      <span><b>アクセント</b> #dc3520 / 4.59:1</span>
+      <span><b>グリッド</b> 12col / max 1200px</span>
+      <span><b>フォント</b> OS フォント（Web フォントなし）</span>
+      <span><b>更新</b> 2026-08</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="目次">
+    <ol>
+      <li><a href="#principles"><span>01</span>原則</a></li>
+      <li><a href="#color"><span>02</span>カラー</a></li>
+      <li><a href="#type"><span>03</span>タイポグラフィ</a></li>
+      <li><a href="#space"><span>04</span>スペース・角丸・影</a></li>
+      <li><a href="#buttons"><span>05</span>ボタン</a></li>
+      <li><a href="#badges"><span>06</span>バッジ・アラート</a></li>
+      <li><a href="#progress"><span>07</span>金額と進捗</a></li>
+      <li><a href="#pcard"><span>08</span>プロジェクトカード</a></li>
+      <li><a href="#reward"><span>09</span>リターンカード</a></li>
+      <li><a href="#form"><span>10</span>フォーム</a></li>
+      <li><a href="#states"><span>11</span>空状態・読込中</a></li>
+      <li><a href="#layout"><span>12</span>画面レイアウト</a></li>
+      <li><a href="#motion"><span>13</span>モーション</a></li>
+      <li><a href="#a11y"><span>14</span>アクセシビリティ</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <!-- 01 ─────────────────────────────────────────────── -->
+    <section id="principles">
+      <div class="eyebrow">01 — Principles</div>
+      <h2>3つの原則</h2>
+      <p>クラウドファンディングの UI は、突き詰めると「信用できるか」「いくら集まっているか」「いま支援すべきか」の3つにしか答えていない。以下の判断はすべてそこから導かれる。</p>
+
+      <h3>原則1 — 金額が主役</h3>
+      <p>ページ内で最も強い視覚的重みは、常に金額。見出しでもロゴでもない。金額には必ず <code>tabular-nums</code> を当てて桁を揃える。桁が揃っていない金額の一覧は、それだけで素人臭くなる。</p>
+
+      <h3>原則2 — アクセントは1色、使い道は2つだけ</h3>
+      <p>アクセントを使ってよいのは<b>支援 CTA</b> と <b>進捗バー</b> のみ。見出しにも、アイコンにも、区切り線にも使わない。使った瞬間に、ページ内で最も重要なボタンが埋もれる。ステータス色（成功・警告・危険）はアクセントとは別の役割で、状態を伝えるためだけに使う。</p>
+
+      <h3>原則3 — 空白は削らない</h3>
+      <p>情報量が多いサービスほど、詰めると安っぽくなる。削るべきは要素の数であって、余白ではない。</p>
+    </section>
+
+    <!-- 02 ─────────────────────────────────────────────── -->
+    <section id="color">
+      <div class="eyebrow">02 — Color</div>
+      <h2>カラー</h2>
+      <p>プリミティブ（原色）を実装から直接参照しない。必ずセマンティックトークン経由で書く。これを破ると、後からダークモードを足せなくなる。</p>
+
+      <h4>Neutral — わずかに寒色へ振ったグレー</h4>
+      <p>純粋なグレーは「何も考えていない」色に見える。青緑側にわずかに寄せることで、アクセントの赤と補色の関係になり、白基調が締まる。</p>
+      <div class="ramp">
+        <figure class="chip" style="margin:0"><i style="background:#ffffff;border-bottom:1px solid var(--doc-rule)"></i><figcaption><b>neutral/0</b>#ffffff</figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#f6f8fa"></i><figcaption><b>neutral/50</b>#f6f8fa <em>1.05</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#eef1f5"></i><figcaption><b>neutral/100</b>#eef1f5 <em>1.10</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#e2e7ee"></i><figcaption><b>neutral/200</b>#e2e7ee <em>1.24</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#cbd3de"></i><figcaption><b>neutral/300</b>#cbd3de <em>1.51</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#9aa5b5"></i><figcaption><b>neutral/400</b>#9aa5b5 <em>2.49</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#6b7688"></i><figcaption><b>neutral/500</b>#6b7688 <em>4.59</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#3d4552"></i><figcaption><b>neutral/700</b>#3d4552 <em>9.67</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#161a21"></i><figcaption><b>neutral/900</b>#161a21 <em>17.44</em></figcaption></figure>
+      </div>
+
+      <h4>Accent — コーラルレッド</h4>
+      <div class="ramp">
+        <figure class="chip" style="margin:0"><i style="background:#fff2f0"></i><figcaption><b>accent/50</b>#fff2f0</figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#ffe1dd"></i><figcaption><b>accent/100</b>#ffe1dd</figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#f04a38"></i><figcaption><b>accent/500</b>#f04a38 <em>3.66</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#dc3520"></i><figcaption><b>accent/600</b>#dc3520 <em>4.59</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#b82717"></i><figcaption><b>accent/700</b>#b82717 <em>6.29</em></figcaption></figure>
+        <figure class="chip" style="margin:0"><i style="background:#961f13"></i><figcaption><b>accent/800</b>#961f13 <em>8.40</em></figcaption></figure>
+      </div>
+
+      <div class="note">
+        <b>なぜ 600 なのか。</b>
+        明るいコーラル（<code>#ff5a4d</code> 等）は白背景で 3.1:1 しかなく、<b>文字色として使えない</b>。
+        600 まで深めると 4.59:1 になり、塗りボタンの白文字・白背景上のリンク文字の<b>両方</b>で AA を満たす。
+        1色で全用途をまかなえるのは、システムとして大きな利点。
+      </div>
+
+      <h4>コントラスト実測値</h4>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>組み合わせ</th><th class="mono">前景</th><th class="mono">背景</th><th class="num">比</th><th>判定</th></tr></thead>
+          <tbody>
+            <tr><td>見出し・金額</td><td class="mono">#161a21</td><td class="mono">#ffffff</td><td class="num">17.44</td><td class="pass">AAA</td></tr>
+            <tr><td>本文</td><td class="mono">#3d4552</td><td class="mono">#ffffff</td><td class="num">9.67</td><td class="pass">AAA</td></tr>
+            <tr><td>補助テキスト</td><td class="mono">#6b7688</td><td class="mono">#ffffff</td><td class="num">4.59</td><td class="pass">AA</td></tr>
+            <tr><td>CTA の白文字</td><td class="mono">#ffffff</td><td class="mono">#dc3520</td><td class="num">4.59</td><td class="pass">AA</td></tr>
+            <tr><td>アクセント文字</td><td class="mono">#b82717</td><td class="mono">#ffffff</td><td class="num">6.29</td><td class="pass">AA</td></tr>
+            <tr><td>成功バッジ</td><td class="mono">#0a6543</td><td class="mono">#e9f7f0</td><td class="num">6.44</td><td class="pass">AA</td></tr>
+            <tr><td>警告バッジ</td><td class="mono">#7f5100</td><td class="mono">#fff6e6</td><td class="num">6.36</td><td class="pass">AA</td></tr>
+            <tr><td>危険バッジ</td><td class="mono">#9c1a1a</td><td class="mono">#fdeceb</td><td class="num">7.13</td><td class="pass">AA</td></tr>
+            <tr><td>情報バッジ</td><td class="mono">#164e9b</td><td class="mono">#eaf2fd</td><td class="num">7.17</td><td class="pass">AA</td></tr>
+            <tr><td>accent/500 を文字に（禁止）</td><td class="mono">#f04a38</td><td class="mono">#ffffff</td><td class="num">3.66</td><td class="fail">不可</td></tr>
+            <tr><td>neutral/400 を本文に（禁止）</td><td class="mono">#9aa5b5</td><td class="mono">#ffffff</td><td class="num">2.49</td><td class="fail">不可</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:var(--doc-fg-3)">
+        値は実測。色を1つでも変えたら再計測すること。
+      </p>
+    </section>
+
+    <!-- 03 ─────────────────────────────────────────────── -->
+    <section id="type">
+      <div class="eyebrow">03 — Typography</div>
+      <h2>タイポグラフィ</h2>
+      <p><b>Web フォントを読み込まない。</b>これは妥協ではなく設計判断。日本語 Web フォントは軽量でも数百KB〜数MBあり、LCP が壊滅する。SNS 流入が主で、モバイル回線での初回表示速度がそのまま支援率に効くため、美しさより速度を取る。</p>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>TYPE SCALE</span><span>mobile / desktop</span></div>
+        <div class="canvas__body">
+          <div class="specimen">
+            <div><small>display-lg · 700 · 1.15</small><span class="sp-text" style="font-size:40px;line-height:1.15;letter-spacing:-.025em;font-weight:700">つくりたいものを、みんなの力で。</span></div>
+            <div><small>heading-lg · 700 · 1.30</small><span class="sp-text" style="font-size:28px;line-height:1.3;letter-spacing:-.015em;font-weight:700">注目のプロジェクト</span></div>
+            <div><small>heading-md · 700 · 1.35</small><span class="sp-text" style="font-size:22px;line-height:1.35;font-weight:700">リターンを選ぶ</span></div>
+            <div><small>title · 600 · 1.50</small><span class="sp-text" style="font-size:17px;font-weight:600">1stアルバムをつくりたい</span></div>
+            <div><small>body · 400 · 1.80</small><span style="font-size:16px;line-height:1.8;max-width:34em">本文。日本語は行間を 1.8 で組む。欧文の 1.5 をそのまま使うと、漢字の密度で紙面が真っ黒に見える。1行は 30〜40 文字を目安にする。</span></div>
+            <div><small>body-sm · 400 · 1.70</small><span style="font-size:14px;line-height:1.7">補足的な説明文に使う。リターンの説明など。</span></div>
+            <div><small>caption · 400 · 1.60</small><span style="font-size:13px;color:var(--text-tertiary)">支援者123人 · 残り12日</span></div>
+            <div><small>label · 600 · +0.04em</small><span style="font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--text-tertiary)">DELIVERY 2026-03</span></div>
+            <div><small>numeric-xl · 700 · tabular</small><span class="money money--xl">¥1,234,567</span></div>
+            <div><small>numeric-lg · 700 · tabular</small><span class="money money--lg">¥10,000</span></div>
+          </div>
+        </div>
+      </div>
+
+      <h3>日本語組版で必ず守ること</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>項目</th><th>規則</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr><td>本文の行間</td><td class="mono">1.8</td><td>欧文の 1.5 だと漢字の密度で黒く見える</td></tr>
+            <tr><td>見出しの行間</td><td class="mono">1.15 – 1.4</td><td>1.8 だと間延びする</td></tr>
+            <tr><td>uppercase</td><td>日本語に当てない</td><td>効かないうえ letter-spacing だけ効いて不自然に開く</td></tr>
+            <tr><td>見出しの折返し</td><td class="mono">text-wrap: balance</td><td>最終行が1文字だけになるのを防ぐ</td></tr>
+            <tr><td>1行の文字数</td><td class="mono">30 – 40字</td><td>欧文 65 文字相当</td></tr>
+            <tr><td>数字</td><td class="mono">tabular-nums</td><td>桁が揃わないと一覧が汚く見える</td></tr>
+            <tr><td>禁則</td><td class="mono">line-break: strict</td><td>長い URL やハンドル名がカードを突き破るのを防ぐ</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>数値の表記</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>対象</th><th>表記</th><th>丸め</th><th>例</th></tr></thead>
+          <tbody>
+            <tr><td>金額</td><td>¥ + カンマ区切り</td><td>—</td><td class="mono">¥1,234,567</td></tr>
+            <tr><td>達成率</td><td>整数 %</td><td><b>切り捨て</b></td><td class="mono">99.9% → 99%</td></tr>
+            <tr><td>残り期間</td><td>24h 以上は日</td><td><b>切り上げ</b></td><td class="mono">47h → 残り2日</td></tr>
+            <tr><td>支援者数</td><td>○人</td><td>—</td><td class="mono">123人</td></tr>
+            <tr><td>お届け予定</td><td>年月まで</td><td>—</td><td class="mono">2026年3月</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <b>達成率は切り捨て、残り日数は切り上げ。</b>
+        どちらも「支援者に不利な誤認を生まない側」に丸める。99.9% を 100% と表示すれば誤認になり、
+        47時間を「残り1日」と表示すれば不当に急かすことになる。
+      </div>
+    </section>
+
+    <!-- 04 ─────────────────────────────────────────────── -->
+    <section id="space">
+      <div class="eyebrow">04 — Space / Radius / Elevation</div>
+      <h2>スペース・角丸・影</h2>
+
+      <h4>スペーススケール（4px 基準）</h4>
+      <div class="canvas">
+        <div class="canvas__bar"><span>SPACE</span><span>「なんとなく15px」を作らない</span></div>
+        <div class="canvas__body">
+          <div class="spacescale">
+            <div><i style="width:2px;height:34px"></i>2</div>
+            <div><i style="width:4px;height:34px"></i>4</div>
+            <div><i style="width:6px;height:34px"></i>6</div>
+            <div><i style="width:8px;height:34px"></i>8</div>
+            <div><i style="width:12px;height:34px"></i>12</div>
+            <div><i style="width:16px;height:34px"></i>16</div>
+            <div><i style="width:20px;height:34px"></i>20</div>
+            <div><i style="width:24px;height:34px"></i>24</div>
+            <div><i style="width:32px;height:34px"></i>32</div>
+            <div><i style="width:40px;height:34px"></i>40</div>
+            <div><i style="width:48px;height:34px"></i>48</div>
+            <div><i style="width:64px;height:34px"></i>64</div>
+            <div><i style="width:80px;height:34px"></i>80</div>
+          </div>
+        </div>
+      </div>
+
+      <h4>角丸 — 用途ごとに変える</h4>
+      <p>全部同じ角丸にするとのっぺりする。要素の性格に応じて4段階を使い分ける。</p>
+      <div class="canvas">
+        <div class="canvas__bar"><span>RADIUS</span></div>
+        <div class="canvas__body">
+          <div class="radii">
+            <div><i style="border-radius:4px"></i>xs 4px<br>タグ</div>
+            <div><i style="border-radius:8px"></i>sm 8px<br>ボタン・入力</div>
+            <div><i style="border-radius:12px"></i>md 12px<br>カード</div>
+            <div><i style="border-radius:16px"></i>lg 16px<br>モーダル</div>
+            <div><i style="border-radius:999px"></i>full<br>バッジ・進捗</div>
+          </div>
+        </div>
+      </div>
+
+      <h4>影 — 必ず枠線と併用する</h4>
+      <p>白背景に淡い影だけだと、低品質なディスプレイでカードの輪郭が消える。影とセットで 1px の枠線を必ず置く。</p>
+      <div class="canvas">
+        <div class="canvas__bar"><span>ELEVATION</span></div>
+        <div class="canvas__body on-sunken">
+          <div class="elevs">
+            <div><i style="box-shadow:none"></i>0 枠線のみ</div>
+            <div><i style="box-shadow:var(--shadow-1)"></i>1 カード</div>
+            <div><i style="box-shadow:var(--shadow-2)"></i>2 ホバー</div>
+            <div><i style="box-shadow:var(--shadow-3)"></i>3 ポップオーバー</div>
+            <div><i style="box-shadow:var(--shadow-4)"></i>4 モーダル</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 ─────────────────────────────────────────────── -->
+    <section id="buttons">
+      <div class="eyebrow">05 — Buttons</div>
+      <h2>ボタン</h2>
+      <p><code>primary</code> は<b>1画面に1つ</b>。支援 CTA のためにある。副次操作に使うと、最も重要なボタンが埋もれる。</p>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>VARIANTS</span><span>size: md (40px)</span></div>
+        <div class="canvas__body">
+          <div class="row">
+            <button class="btn btn--primary">このプロジェクトを支援する</button>
+            <button class="btn btn--secondary">プレビュー</button>
+            <button class="btn btn--ghost">キャンセル</button>
+            <button class="btn btn--danger">返金する</button>
+            <button class="btn btn--link">詳しく見る</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>SIZES</span><span>sm 32 / md 40 / lg 48</span></div>
+        <div class="canvas__body">
+          <div class="row">
+            <button class="btn btn--primary btn--sm">支援する</button>
+            <button class="btn btn--primary">支援する</button>
+            <button class="btn btn--primary btn--lg">このプロジェクトを支援する</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>STATES</span><span>全バリアントで実装必須</span></div>
+        <div class="canvas__body">
+          <div class="row">
+            <button class="btn btn--primary">既定</button>
+            <button class="btn btn--primary" style="background:var(--accent-solid-hover);box-shadow:var(--shadow-2)">ホバー</button>
+            <button class="btn btn--primary" style="background:var(--accent-solid-active);transform:translateY(1px)">押下</button>
+            <button class="btn btn--primary is-focus">フォーカス</button>
+            <button class="btn btn--primary" disabled>無効</button>
+            <button class="btn btn--primary" aria-disabled="true"><i class="spinner" aria-hidden="true"></i>処理中…</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <b><code>loading</code> 状態を必ず実装する。</b>
+        支援ボタンの二重送信は実際に起きる。押した瞬間に <code>disabled</code> と「処理中…」に変える。
+        ただし UI での防止だけでは足りない。サーバー側の冪等性と<b>両方</b>必要
+        （<code>docs/11-payment-hardening.md</code> §5 の4層防御）。
+      </div>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>MOBILE CTA</span><span>幅100% / 高さ48px / タップ領域44px以上</span></div>
+        <div class="canvas__body">
+          <div style="max-width:340px"><button class="btn btn--primary btn--lg btn--block">このプロジェクトを支援する</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 ─────────────────────────────────────────────── -->
+    <section id="badges">
+      <div class="eyebrow">06 — Badges / Alerts</div>
+      <h2>バッジ・アラート</h2>
+      <p>ステータス色は<b>状態を伝えるためだけ</b>に使う。装飾に使うと「意味のある色」であることが伝わらなくなる。また、<b>色だけで情報を伝えない</b>。「残りわずか」は色と文言の両方で示す。</p>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>BADGES</span><span>h22 / radius full / 12px 600</span></div>
+        <div class="canvas__body">
+          <div class="row">
+            <span class="badge badge--neutral">音楽</span>
+            <span class="badge badge--warning">残り3個</span>
+            <span class="badge badge--danger">残り2日</span>
+            <span class="badge badge--success">目標達成</span>
+            <span class="badge badge--info">目標達成でプロジェクト成立</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>ALERTS</span><span>「何が起きたか」＋「どうすればよいか」</span></div>
+        <div class="canvas__body">
+          <div class="stack">
+            <div class="alert alert--warning"><span aria-hidden="true">⚠</span><span><b>入金先の登録が完了していません</b>登録が完了するまでプロジェクトを公開できません。</span></div>
+            <div class="alert alert--info"><span aria-hidden="true">ⓘ</span><span><b>このプロジェクトは目標達成時のみ決済されます</b>いまはカード情報の登録のみで、請求は行われません。2026年3月31日の募集終了時点で目標を達成した場合に ¥12,000 が請求されます。</span></div>
+            <div class="alert alert--danger"><span aria-hidden="true">✕</span><span><b>決済に失敗しました</b>カードの有効期限をご確認のうえ、別のカードをお試しください。</span></div>
+            <div class="alert alert--success"><span aria-hidden="true">✓</span><span><b>目標を達成しました</b>ご支援ありがとうございます。募集は3月31日まで続きます。</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 ─────────────────────────────────────────────── -->
+    <section id="progress">
+      <div class="eyebrow">07 — Money &amp; Progress</div>
+      <h2>金額と進捗バー</h2>
+      <p>このプロダクトの心臓。<b>100% 到達で色を <code>accent</code> から <code>success</code> に変える。</b>達成が一目で分かる瞬間が、このサービスの気持ちよさそのもの。</p>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>PROGRESS</span><span>&lt;100% accent / ≥100% success</span></div>
+        <div class="canvas__body">
+          <div class="stack" style="max-width:420px;gap:22px">
+            <div><div class="progress"><i style="width:0%"></i></div><div class="metaline" style="margin-top:6px">0% — まだ支援がない</div></div>
+            <div><div class="progress"><i style="width:34%"></i></div><div class="metaline" style="margin-top:6px">34%</div></div>
+            <div><div class="progress"><i style="width:82%"></i></div><div class="metaline" style="margin-top:6px">82%</div></div>
+            <div><div class="progress progress--lg"><i class="done" style="width:100%"></i></div><div class="metaline" style="margin-top:6px">100% — 達成</div></div>
+            <div><div class="progress progress--lg"><i class="done" style="width:100%"></i></div><div class="metaline" style="margin-top:6px">254% — バーは100%で頭打ち、数値は超えて表示</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>SUMMARY BLOCK</span><span>プロジェクト詳細サイドバー</span></div>
+        <div class="canvas__body">
+          <div style="max-width:290px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:20px;box-shadow:var(--shadow-1)">
+            <div class="money money--xl">¥1,234,567</div>
+            <div class="progress progress--lg" style="margin:12px 0 8px"><i style="width:82%"></i></div>
+            <div class="metaline">目標 ¥1,500,000 の <b style="color:var(--text-primary)">82%</b></div>
+            <div style="display:flex;gap:24px;margin:16px 0;padding:14px 0;border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle)">
+              <div><div class="money money--md">123</div><div class="metaline">支援者</div></div>
+              <div><div class="money money--md">12</div><div class="metaline">残り日数</div></div>
+            </div>
+            <button class="btn btn--primary btn--lg btn--block">このプロジェクトを支援する</button>
+            <button class="btn btn--secondary btn--block" style="margin-top:8px">シェアする</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>a11y。</b> <code>role="progressbar"</code> と <code>aria-valuenow / valuemin / valuemax</code> を必ず付ける。
+        <code>aria-valuenow</code> は <b>100 で頭打ち</b>にする。254 をそのまま渡すと支援技術の読み上げが壊れる。
+      </div>
+    </section>
+
+    <!-- 08 ─────────────────────────────────────────────── -->
+    <section id="pcard">
+      <div class="eyebrow">08 — Project Card</div>
+      <h2>プロジェクトカード</h2>
+      <p>一覧の主役。<b>要素の順番を変えない。</b>どの一覧でも同じ順で読めることが、そのまま閲覧の速さになる。タイトルは2行でクランプする（3行にするとカードの高さが揃わない）。</p>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>PROJECT CARD</span><span>16:9 / radius-md / shadow-1 → 2</span></div>
+        <div class="canvas__body on-sunken">
+          <div class="pcards">
+            <article class="pcard">
+              <div class="pcard__media"><span aria-hidden="true">🎵</span><span class="pcard__cat">音楽</span></div>
+              <div class="pcard__body">
+                <p class="pcard__creator">サンプル出品者</p>
+                <h5 class="pcard__title">まだ支援がないプロジェクト（タイトルが長い場合に2行でクランプされることを確認するためのサンプル）</h5>
+                <div class="progress"><i style="width:0%"></i></div>
+                <div class="pcard__amount"><span class="money money--md">¥0</span><span class="pcard__rate">0%</span></div>
+                <p class="metaline" style="margin:0">支援者0人 · <span style="color:var(--danger-fg);font-weight:600">残り2日</span></p>
+              </div>
+            </article>
+            <article class="pcard">
+              <div class="pcard__media"><span aria-hidden="true">🎨</span><span class="pcard__cat">アート</span></div>
+              <div class="pcard__body">
+                <p class="pcard__creator">佐藤スタジオ</p>
+                <h5 class="pcard__title">廃校を改装して、町の小さな展示室をつくりたい</h5>
+                <div class="progress"><i style="width:34%"></i></div>
+                <div class="pcard__amount"><span class="money money--md">¥340,000</span><span class="pcard__rate">34%</span></div>
+                <p class="metaline" style="margin:0">支援者27人 · 残り18日</p>
+              </div>
+            </article>
+            <article class="pcard">
+              <div class="pcard__media"><span aria-hidden="true">🎵</span><span class="pcard__cat">音楽</span></div>
+              <div class="pcard__body">
+                <p class="pcard__creator">クロエ・アンド・ザ・ノイズ</p>
+                <h5 class="pcard__title">1stアルバムをつくりたい</h5>
+                <div class="progress"><i style="width:82%"></i></div>
+                <div class="pcard__amount"><span class="money money--md">¥820,000</span><span class="pcard__rate">82%</span></div>
+                <p class="metaline" style="margin:0">支援者143人 · 残り12日</p>
+              </div>
+            </article>
+            <article class="pcard">
+              <div class="pcard__media"><span aria-hidden="true">🎬</span><span class="pcard__cat">映像</span></div>
+              <div class="pcard__body">
+                <p class="pcard__creator">ドキュメンタリー製作委員会</p>
+                <h5 class="pcard__title">島の最後の映画館を記録する</h5>
+                <div class="progress"><i class="done" style="width:100%"></i></div>
+                <div class="pcard__amount"><span class="money money--md">¥1,000,000</span><span class="pcard__rate">100%</span></div>
+                <p class="metaline" style="margin:0">支援者210人 · 残り6日</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 ─────────────────────────────────────────────── -->
+    <section id="reward">
+      <div class="eyebrow">09 — Reward Card</div>
+      <h2>リターンカード</h2>
+      <p>支援金額と提供内容の対応が、ここで完全に伝わる必要がある。お届け予定・配送の要否・残数を必ず出す。</p>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>REWARD — STATES</span><span>default / selected / sold out</span></div>
+        <div class="canvas__body on-sunken">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px;align-items:start">
+            <div class="reward">
+              <div class="money money--lg">¥3,000</div>
+              <div class="reward__title">デジタル音源 先行配信</div>
+              <p class="reward__desc">完成したアルバム全10曲を、一般公開の2週間前にお届けします。</p>
+              <div class="reward__facts">
+                <span>お届け予定 2026年3月</span>
+                <span>配送なし（データ）</span>
+              </div>
+              <button class="btn btn--secondary btn--block">このリターンを選ぶ</button>
+            </div>
+            <div class="reward reward--selected">
+              <div class="money money--lg">¥10,000</div>
+              <div class="reward__title">CD＋ライブご招待</div>
+              <p class="reward__desc">サイン入りCDと、レコ発ライブ（東京）のチケット1枚をお届けします。</p>
+              <div class="reward__facts">
+                <span>お届け予定 2026年4月</span>
+                <span>配送あり（送料込み）</span>
+              </div>
+              <div><span class="badge badge--warning">残り5個</span></div>
+              <button class="btn btn--primary btn--block">選択中</button>
+            </div>
+            <div class="reward reward--soldout">
+              <div class="money money--lg">¥50,000</div>
+              <div class="reward__title">あなたのために1曲つくります</div>
+              <p class="reward__desc">テーマをうかがって、オリジナル曲を制作しお届けします。</p>
+              <div class="reward__facts">
+                <span>お届け予定 2026年6月</span>
+                <span>配送なし（データ）</span>
+              </div>
+              <button class="btn" disabled>売り切れました</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 ─────────────────────────────────────────────── -->
+    <section id="form">
+      <div class="eyebrow">10 — Forms</div>
+      <h2>フォーム</h2>
+      <p>入力文字サイズは <b>16px 未満にしない</b>（iOS で自動ズームが発生し、支援フローが破綻する）。ラベルは <code>&lt;label for&gt;</code> で必ず紐づけ、プレースホルダをラベル代わりにしない。</p>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>FIELD — STATES</span><span>default / focus / error / disabled</span></div>
+        <div class="canvas__body">
+          <div style="display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+            <div class="field">
+              <label class="field__label" for="f1">お名前 <span class="req">必須</span></label>
+              <input class="input" id="f1" placeholder="山田 太郎">
+              <span class="help">リターンのお届け先として使用します</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f2">郵便番号 <span class="req">必須</span></label>
+              <input class="input input--error" id="f2" value="123-4567" aria-invalid="true" aria-describedby="f2e">
+              <span class="err" id="f2e">郵便番号はハイフンなしの7桁で入力してください</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f3">応援メッセージ</label>
+              <input class="input" id="f3" placeholder="任意">
+              <span class="help">プロジェクトページに公開されます</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f4">支援金額</label>
+              <input class="input" id="f4" value="¥10,000" disabled>
+              <span class="help">リターンの選択によって決まります</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>エラー文言は「何が起きたか」＋「どう直すか」。</b>
+        「入力エラー」では直せない。「郵便番号はハイフンなしの7桁で入力してください」と書く。
+        日本語フォーム（氏名・住所・電話番号）のパターンは<b>デジタル庁デザインシステムを規範として踏襲する</b>
+        （<code>docs/14-design-system-stack.md</code> §4.1）。ここで独自性を出す意味はなく、
+        間違えると支援が完了しない。
+      </div>
+    </section>
+
+    <!-- 11 ─────────────────────────────────────────────── -->
+    <section id="states">
+      <div class="eyebrow">11 — Empty / Loading</div>
+      <h2>空状態・読み込み中</h2>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>EMPTY STATE</span><span>必ず次の行動を置く</span></div>
+        <div class="canvas__body on-sunken">
+          <div class="empty">
+            <div style="font-size:30px" aria-hidden="true">🔍</div>
+            <h5>検索条件に合うプロジェクトが見つかりませんでした</h5>
+            <p>条件を変えるか、すべてのプロジェクトから探してみてください。</p>
+            <div class="row">
+              <button class="btn btn--primary">すべてのプロジェクトを見る</button>
+              <button class="btn btn--secondary">条件をリセット</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="canvas__bar"><span>SKELETON</span><span>スピナーを使わない</span></div>
+        <div class="canvas__body on-sunken">
+          <div class="pcards">
+            <div class="pcard">
+              <div class="skel" style="aspect-ratio:16/9;border-radius:0"></div>
+              <div class="pcard__body">
+                <div class="skel" style="height:12px;width:45%"></div>
+                <div class="skel" style="height:15px;width:92%"></div>
+                <div class="skel" style="height:15px;width:64%"></div>
+                <div class="skel" style="height:6px;width:100%;border-radius:999px;margin-top:4px"></div>
+                <div class="skel" style="height:18px;width:52%"></div>
+              </div>
+            </div>
+            <div class="pcard">
+              <div class="skel" style="aspect-ratio:16/9;border-radius:0"></div>
+              <div class="pcard__body">
+                <div class="skel" style="height:12px;width:38%"></div>
+                <div class="skel" style="height:15px;width:88%"></div>
+                <div class="skel" style="height:15px;width:55%"></div>
+                <div class="skel" style="height:6px;width:100%;border-radius:999px;margin-top:4px"></div>
+                <div class="skel" style="height:18px;width:46%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:14px;font-size:13.5px;color:var(--doc-fg-3)">
+        カードの形のまま灰色で出す。スピナーは「何が来るか」を伝えないぶん体感が遅い。
+        <code>prefers-reduced-motion</code> ではシマーを止める。
+      </p>
+    </section>
+
+    <!-- 12 ─────────────────────────────────────────────── -->
+    <section id="layout">
+      <div class="eyebrow">12 — Layout</div>
+      <h2>画面レイアウト</h2>
+
+      <h4>プロジェクト詳細（≥1024px）— 8 : 4 の2カラム</h4>
+      <div class="canvas">
+        <div class="canvas__bar"><span>PROJECT DETAIL — DESKTOP</span><span>サイドバーは top:80px で sticky</span></div>
+        <div class="canvas__body on-sunken">
+          <div class="layout">
+            <div class="layout__main">
+              <div class="slot" style="aspect-ratio:16/9;display:grid;place-items:center">カバー画像 / 動画 16:9</div>
+              <div class="slot--filled slot" style="border-style:solid">
+                <div class="row" style="gap:6px"><span class="badge badge--neutral">音楽</span><span class="badge badge--info">目標達成型</span></div>
+                <h5 style="margin:10px 0 0;font-size:19px;font-weight:700;color:var(--text-primary);line-height:1.4">1stアルバムをつくりたい</h5>
+                <p style="margin:6px 0 0;font-size:13.5px;color:var(--text-tertiary)">4人で3年間かけて書いた10曲を、ちゃんとした音で残したい。</p>
+              </div>
+              <div class="slot">出品者ブロック（アバター・実績数）</div>
+              <div class="slot">タブ： ストーリー / 活動報告 / コメント / 支援者</div>
+              <div class="slot" style="min-height:120px">本文（Markdown）</div>
+            </div>
+            <div class="layout__side">
+              <div class="slot slot--sticky">■ sticky サイドバー</div>
+              <div class="slot--filled slot" style="border-style:solid">
+                <div class="money money--lg">¥1,234,567</div>
+                <div class="progress" style="margin:10px 0 6px"><i style="width:82%"></i></div>
+                <div class="metaline">目標 ¥1,500,000 · 82%</div>
+                <button class="btn btn--primary btn--block" style="margin-top:12px">支援する</button>
+              </div>
+              <div class="slot">リターン一覧</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h4>モバイル（&lt;1024px）— 1カラム＋下部固定 CTA</h4>
+      <div class="canvas">
+        <div class="canvas__bar"><span>PROJECT DETAIL — MOBILE</span><span>safe-area-inset-bottom を必ず考慮</span></div>
+        <div class="canvas__body on-sunken">
+          <div class="phone">
+            <div class="skel" style="aspect-ratio:16/9;border-radius:0"></div>
+            <div style="padding:14px">
+              <h5 style="margin:0;font-size:17px;font-weight:700;color:var(--text-primary);line-height:1.4">1stアルバムをつくりたい</h5>
+              <div class="money money--lg" style="margin-top:10px">¥1,234,567</div>
+              <div class="progress" style="margin:8px 0 6px"><i style="width:82%"></i></div>
+              <div class="metaline">支援者123人 · 残り12日</div>
+              <p style="font-size:13.5px;line-height:1.8;margin:14px 0 0;color:var(--text-secondary)">4人で3年間かけて書いた10曲を、ちゃんとしたスタジオで録音してアルバムにしたいと考えています。</p>
+            </div>
+            <div class="mobilebar">
+              <div style="flex:1;min-width:0">
+                <div class="money money--md">¥1,234,567</div>
+                <div class="metaline">82% · 残り12日</div>
+              </div>
+              <button class="btn btn--primary btn--lg" style="flex:none">支援する</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="note">
+        <b>固定 CTA バーは <code>env(safe-area-inset-bottom)</code> を必ず考慮する。</b>
+        iPhone のホームバーに重なると、最も重要なボタンが押せなくなる。
+        また、支援の大半はモバイルからで、この固定バーの有無が支援率に直結する。
+      </div>
+    </section>
+
+    <!-- 13 ─────────────────────────────────────────────── -->
+    <section id="motion">
+      <div class="eyebrow">13 — Motion</div>
+      <h2>モーション</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>トークン</th><th class="num">時間</th><th>用途</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">instant</td><td class="num">100ms</td><td>色の変化・ホバー</td></tr>
+            <tr><td class="mono">fast</td><td class="num">150ms</td><td>ボタンの押下</td></tr>
+            <tr><td class="mono">base</td><td class="num">200ms</td><td>影・変形・展開</td></tr>
+            <tr><td class="mono">slow</td><td class="num">300ms</td><td>モーダル・ボトムシート</td></tr>
+            <tr><td class="mono">deliberate</td><td class="num">500ms</td><td><b>進捗バーの伸長</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:16px"><code>--ease-standard: cubic-bezier(.2,0,0,1)</code> を既定にする。</p>
+      <p><b>動かすもの:</b> ホバーの影、進捗バー、モーダル、トースト、スケルトン、達成の瞬間。<br>
+      <b>動かさないもの:</b> それ以外。とくに<b>スクロール連動アニメーションは入れない</b>。支援の邪魔になるうえ、モバイルで重い。</p>
+      <p><code>prefers-reduced-motion: reduce</code> で全アニメーションを 0.01ms に落とす。この仕様書自身も対応済み。</p>
+    </section>
+
+    <!-- 14 ─────────────────────────────────────────────── -->
+    <section id="a11y">
+      <div class="eyebrow">14 — Accessibility</div>
+      <h2>アクセシビリティ（WCAG 2.2 AA）</h2>
+      <p>リリース前に全項目を確認する。日本語 UI 固有の論点は、デジタル庁デザインシステムを規範として参照する。</p>
+      <ul class="checklist">
+        <li>本文・補助テキストがすべて 4.5:1 以上（§02 の実測値で担保済み）</li>
+        <li>大きい文字（18px 700 以上、または 24px 以上）は 3:1 以上</li>
+        <li>すべてのインタラクティブ要素に <code>focus-visible</code> のリング（2px / offset 2px）</li>
+        <li>タブ順序が視覚順序と一致している</li>
+        <li>進捗バーに <code>role="progressbar"</code> と aria 属性。<code>aria-valuenow</code> は 100 で頭打ち</li>
+        <li>画像に適切な <code>alt</code>。装飾画像は <code>alt=""</code></li>
+        <li><b>色だけで情報を伝えていない</b>（「残りわずか」は色＋文言）</li>
+        <li>フォームのラベルが <code>&lt;label for&gt;</code> で紐づいている</li>
+        <li>エラーが <code>aria-describedby</code> で入力欄に紐づいている</li>
+        <li>タップターゲットが 44×44px 以上</li>
+        <li><code>prefers-reduced-motion</code> に対応している</li>
+        <li>ページに <code>lang="ja"</code></li>
+        <li>見出しレベルが飛んでいない（h1 → h3 にしない）</li>
+        <li>モーダルでフォーカストラップ、Esc で閉じる</li>
+        <li>支援完了などの動的更新を <code>aria-live</code> で通知</li>
+        <li>入力文字サイズが 16px 以上（iOS の自動ズーム防止）</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="doc">
+    FUNDBEAT Design System v1.0 — 仕様の原典は docs/07-design.md、技術選定は docs/14-design-system-stack.md。
+    仕様を変えるときは 07-design.md → このファイル → 実装 の順で更新する。
+  </footer>
+
+</div>
