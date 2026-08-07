@@ -9,7 +9,7 @@ CAMPFIRE のようなマルチ出品者型プラットフォームを、まず�
 
 | ディレクトリ | 内容 |
 |---|---|
-| `docs/` | 設計ドキュメント（01〜14） |
+| `docs/` | 設計ドキュメント（01〜15） |
 | `legal/` | 規約類のドラフト4点。**要弁護士レビュー** |
 | `design/` | **スタイルガイド（HTML）。ブラウザで直接開ける** |
 | `reference/` | 実装のコピー元（Prisma スキーマ・手数料計算・台帳・UI コンポーネント） |
@@ -65,6 +65,7 @@ CAMPFIRE のようなマルチ出品者型プラットフォームを、まず�
 | 12 | [points-gamification.md](docs/12-points-gamification.md) | **応援ポイント**：リポスト/紹介の設計・法規制の回避・不正対策 |
 | 13 | [payment-cost.md](docs/13-payment-cost.md) | **決済コスト削減**：効く順のレバー・数値モデル |
 | 14 | [design-system-stack.md](docs/14-design-system-stack.md) | **デザインシステムの技術選定**：Base UI / Radix / React Aria の比較と3層構成 |
+| 15 | [growth.md](docs/15-growth.md) | **立ち上げとグロース**：コールドスタートの解き方・第1号案件の設計・チャネル・指標 |
 
 ---
 
