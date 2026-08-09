@@ -1,0 +1,9 @@
+anthropic>=0.90.0
+sounddevice>=0.4.6
+numpy>=1.26
+
+# STTバックエンド (どちらか一方でOK)
+# Apple Silicon ならローカルで無料・高速に動く mlx-whisper を推奨:
+mlx-whisper>=0.4.0; platform_machine == "arm64" and sys_platform == "darwin"
+# OpenAI Whisper API を使う場合 (OPENAI_API_KEY が必要):
+# openai>=1.50.0
